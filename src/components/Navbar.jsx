@@ -163,7 +163,7 @@ export default function Navbar() {
                 className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-gradient-to-r from-sky-600 to-blue-700 text-white font-bold text-sm text-center shadow-md active:scale-98"
               >
                 <UserPlus className="w-4 h-4" />
-                <span>Fill Membership Application (Doc 2 Form)</span>
+                <span>Fill Membership Application</span>
               </Link>
               <Link
                 href="/admin"

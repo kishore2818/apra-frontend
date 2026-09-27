@@ -67,7 +67,7 @@ export default function Home() {
               </div>
 
               {/* Right: Key Focus Areas Grid */}
-              <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+              <div className="lg:col-span-6 grid grid-cols-2 gap-3 sm:gap-4">
                 <div className="p-4 sm:p-6 rounded-2xl bg-gradient-to-br from-sky-50 to-white border border-sky-100 shadow-xs space-y-2.5">
                   <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-sky-600 text-white flex items-center justify-center">
                     <Lightbulb className="w-4 h-4 sm:w-5 sm:h-5" />

@@ -68,7 +68,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link href="/membership" className="text-amber-400 font-semibold hover:underline">
-                  New Membership Application (Doc 2 Form)
+                  New Membership Application
                 </Link>
               </li>
               <li>

@@ -74,37 +74,94 @@ export default function OfficeBearers() {
       .join('')
       .toUpperCase();
 
-    return (
-      <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/90 shadow-xs hover:shadow-md transition-all flex flex-col justify-between space-y-3">
-        <div className="flex items-center gap-3.5 sm:gap-4">
-          {/* Circular Avatar */}
+    // Compact mode: vertical stack for 3-column mobile grid
+    if (compact) {
+      return (
+        <div className="bg-white rounded-2xl p-2.5 sm:p-5 border border-slate-200/90 shadow-xs hover:shadow-md transition-all flex flex-col items-center text-center space-y-2">
+          {/* Avatar */}
           {bearer.avatar ? (
             <img
               src={bearer.avatar}
               alt={bearer.name}
-              className="w-16 h-16 sm:w-18 sm:h-18 rounded-full object-cover border-2 border-slate-100 shadow-xs flex-shrink-0"
+              className="w-10 h-10 sm:w-16 sm:h-16 rounded-full object-cover border-2 border-slate-100 shadow-xs flex-shrink-0"
             />
           ) : isLegal ? (
-            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center font-bold text-lg flex-shrink-0 shadow-inner">
-              <Scale className="w-7 h-7" />
+            <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center font-bold flex-shrink-0 shadow-inner">
+              <Scale className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
           ) : (
-            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-sky-100 text-sky-800 flex items-center justify-center font-bold text-base sm:text-lg flex-shrink-0 shadow-inner">
+            <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-sky-100 text-sky-800 flex items-center justify-center font-bold text-xs sm:text-base flex-shrink-0 shadow-inner">
+              {initials || 'AP'}
+            </div>
+          )}
+
+          {/* Name & Role */}
+          <div className="w-full min-w-0">
+            <h4 className="text-[10px] sm:text-sm font-bold text-slate-900 leading-snug line-clamp-2">
+              {bearer.name}
+            </h4>
+            <p className="text-[9px] sm:text-xs font-medium text-slate-500 mt-0.5 line-clamp-1">
+              {bearer.role}
+            </p>
+          </div>
+
+          {/* Icon-only action buttons */}
+          <div className="flex gap-1.5 pt-1 border-t border-slate-100 w-full justify-center">
+            <a
+              href={`tel:${bearer.phone}`}
+              className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-sky-50 text-sky-700 hover:bg-sky-100 border border-sky-200/80 active:scale-95 transition-colors"
+              title={`Call ${bearer.phone}`}
+            >
+              <Phone className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            </a>
+            <a
+              href={`https://wa.me/91${bearer.phone.replace(/\D/g, '')}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white shadow-xs active:scale-95 transition-colors"
+              title="WhatsApp"
+            >
+              <MessageCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            </a>
+          </div>
+        </div>
+      );
+    }
+
+    // Default (full) card layout
+    return (
+      <div className="bg-white rounded-2xl p-3 sm:p-5 border border-slate-200/90 shadow-xs hover:shadow-md transition-all flex flex-col justify-between space-y-2.5 sm:space-y-3">
+        {/* Top: Avatar + Name/Role stacked for mobile, side-by-side on sm+ */}
+        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-2 sm:gap-4">
+          {/* Circular Avatar — smaller on mobile */}
+          {bearer.avatar ? (
+            <img
+              src={bearer.avatar}
+              alt={bearer.name}
+              className="w-12 h-12 sm:w-16 sm:h-16 rounded-full object-cover border-2 border-slate-100 shadow-xs flex-shrink-0"
+            />
+          ) : isLegal ? (
+            <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center font-bold flex-shrink-0 shadow-inner">
+              <Scale className="w-5 h-5 sm:w-7 sm:h-7" />
+            </div>
+          ) : (
+            <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-sky-100 text-sky-800 flex items-center justify-center font-bold text-sm sm:text-lg flex-shrink-0 shadow-inner">
               {initials || 'AP'}
             </div>
           )}
 
           {/* Member Details */}
-          <div className="min-w-0 flex-1">
-            <h4 className="text-sm sm:text-base font-bold text-slate-900 leading-snug truncate">
+          <div className="min-w-0 flex-1 text-center sm:text-left">
+            {/* Name: wraps on mobile instead of truncating */}
+            <h4 className="text-xs sm:text-base font-bold text-slate-900 leading-snug line-clamp-2 sm:line-clamp-none">
               {bearer.name}
             </h4>
-            <p className="text-xs font-medium text-slate-500 truncate">
+            <p className="text-[10px] sm:text-xs font-medium text-slate-500 mt-0.5 line-clamp-1">
               {bearer.role}
             </p>
-            
-            {/* Phone & Copy Icon */}
-            <div className="flex items-center gap-1.5 mt-1 text-xs text-slate-600 font-mono">
+
+            {/* Phone — hidden on mobile, shown on sm+ */}
+            <div className="hidden sm:flex items-center gap-1.5 mt-1 text-xs text-slate-600 font-mono">
               <Phone className="w-3 h-3 text-slate-400" />
               <span>{bearer.phone}</span>
               <button
@@ -122,23 +179,25 @@ export default function OfficeBearers() {
           </div>
         </div>
 
-        {/* Action Buttons: Call (Sky Blue) & WhatsApp (Green) */}
-        <div className="grid grid-cols-2 gap-2 pt-1 border-t border-slate-100">
+        {/* Action Buttons */}
+        <div className="grid grid-cols-2 gap-1.5 sm:gap-2 pt-1.5 border-t border-slate-100">
+          {/* Mobile: icon + "Call" short text | sm+: icon + "Call" */}
           <a
             href={`tel:${bearer.phone}`}
-            className="inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-sky-50 text-sky-700 hover:bg-sky-100 font-bold text-xs transition-colors border border-sky-200/80 active:scale-95"
+            className="inline-flex items-center justify-center gap-1 sm:gap-1.5 py-2 px-2 sm:px-3 rounded-xl bg-sky-50 text-sky-700 hover:bg-sky-100 font-bold text-xs transition-colors border border-sky-200/80 active:scale-95"
           >
-            <Phone className="w-3.5 h-3.5" />
-            <span>Call</span>
+            <Phone className="w-3.5 h-3.5 flex-shrink-0" />
+            <span className="truncate">Call</span>
           </a>
+          {/* Mobile: icon + "WA" | sm+: icon + "WhatsApp" */}
           <a
             href={`https://wa.me/91${bearer.phone.replace(/\D/g, '')}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-colors shadow-xs active:scale-95"
+            className="inline-flex items-center justify-center gap-1 sm:gap-1.5 py-2 px-2 sm:px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-colors shadow-xs active:scale-95"
           >
-            <MessageCircle className="w-3.5 h-3.5" />
-            <span>WhatsApp</span>
+            <MessageCircle className="w-3.5 h-3.5 flex-shrink-0" />
+            <span className="hidden xs:inline sm:inline truncate">WA</span>
           </a>
         </div>
       </div>
@@ -183,34 +242,36 @@ export default function OfficeBearers() {
         </div>
 
         {/* Search Bar & Role Selector Dropdown */}
-        <div className="bg-white p-2.5 sm:p-3 rounded-2xl border border-slate-200 shadow-xs max-w-4xl mx-auto flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+        <div className="bg-white p-2.5 sm:p-3 rounded-2xl border border-slate-200 shadow-xs max-w-4xl mx-auto flex flex-row items-stretch gap-2.5">
+          {/* Search — left side on all screens */}
           <div className="relative flex-1">
             <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Search by name, role or phone number..."
+              placeholder="Search by name, role or phone..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2 rounded-xl text-xs sm:text-sm border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 bg-slate-50/50 focus:bg-white"
             />
           </div>
 
-          <div className="relative sm:w-48">
+          {/* Role selector — right side on all screens */}
+          <div className="relative w-28 sm:w-48 flex-shrink-0">
             <select
               value={selectedRole}
               onChange={(e) => setSelectedRole(e.target.value)}
-              className="w-full appearance-none pl-3.5 pr-8 py-2 rounded-xl text-xs sm:text-sm border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-sky-500 font-semibold text-slate-700 cursor-pointer"
+              className="w-full appearance-none pl-2.5 pr-7 py-2 rounded-xl text-xs sm:text-sm border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-sky-500 font-semibold text-slate-700 cursor-pointer"
             >
               <option value="ALL">All Roles ▾</option>
               <option value="President">President</option>
               <option value="Vice-President">Vice Presidents</option>
               <option value="Secretary">Secretary</option>
               <option value="Treasurer">Treasurer</option>
-              <option value="Joint Secretary">Joint Secretaries</option>
+              <option value="Joint Secretary">Joint Sec.</option>
               <option value="Legal">Legal Advisors</option>
-              <option value="General">General Advisors</option>
+              <option value="General">General Adv.</option>
             </select>
-            <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <ChevronDown className="w-4 h-4 text-slate-400 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
           </div>
         </div>
 
@@ -298,7 +359,8 @@ export default function OfficeBearers() {
               <span>Vice Presidents</span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Mobile: 2 cols | Desktop: 2 cols */}
+            <div className="grid grid-cols-2 md:grid-cols-2 gap-3 sm:gap-4">
               {vicePresidents.filter(matchesSearchOrFilter).map((vp, idx) => (
                 <MemberCard key={idx} bearer={vp} />
               ))}
@@ -316,7 +378,8 @@ export default function OfficeBearers() {
               <span>Secretary & Treasurer</span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Mobile: 2 cols | Desktop: 2 cols */}
+            <div className="grid grid-cols-2 md:grid-cols-2 gap-3 sm:gap-4">
               {secAndTreasurer.filter(matchesSearchOrFilter).map((member, idx) => (
                 <MemberCard key={idx} bearer={member} />
               ))}
@@ -334,9 +397,10 @@ export default function OfficeBearers() {
               <span>Joint Secretaries</span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Mobile: 3 cols | Desktop: 3 cols */}
+            <div className="grid grid-cols-3 lg:grid-cols-3 gap-2 sm:gap-4">
               {jointSecretaries.filter(matchesSearchOrFilter).map((js, idx) => (
-                <MemberCard key={idx} bearer={js} />
+                <MemberCard key={idx} bearer={js} compact={true} />
               ))}
             </div>
           </div>
@@ -355,7 +419,8 @@ export default function OfficeBearers() {
                 <span>Legal Advisors</span>
               </div>
 
-              <div className="space-y-4">
+              {/* Mobile: 2 cols */}
+              <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:block lg:space-y-4">
                 {legalAdvisors.filter(matchesSearchOrFilter).map((advisor, idx) => (
                   <MemberCard key={idx} bearer={advisor} />
                 ))}
@@ -371,7 +436,8 @@ export default function OfficeBearers() {
                 <span>General Advisors</span>
               </div>
 
-              <div className="space-y-4">
+              {/* Mobile: 2 cols */}
+              <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:block lg:space-y-4">
                 {generalAdvisors.filter(matchesSearchOrFilter).map((advisor, idx) => (
                   <MemberCard key={idx} bearer={advisor} />
                 ))}
