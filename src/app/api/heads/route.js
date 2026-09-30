@@ -7,8 +7,21 @@ import {
   resetOfficeBearersToDefault 
 } from '@/lib/serverStore';
 
+const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
+
 export async function GET() {
   try {
+    // Try fetching from Backend API (Supabase)
+    try {
+      const backendRes = await fetch(`${BACKEND_URL}/api/heads`);
+      if (backendRes.ok) {
+        const data = await backendRes.json();
+        return NextResponse.json(data);
+      }
+    } catch (err) {
+      console.warn('Backend API unavailable for heads GET, using local fallback:', err.message);
+    }
+
     const bearers = getAllOfficeBearers();
     return NextResponse.json({ success: true, bearers });
   } catch (error) {
@@ -21,6 +34,13 @@ export async function POST(request) {
     const body = await request.json();
 
     if (body.action === 'RESET') {
+      try {
+        await fetch(`${BACKEND_URL}/api/heads`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'RESET' })
+        });
+      } catch (e) {}
       const resetList = resetOfficeBearersToDefault();
       return NextResponse.json({
         success: true,
@@ -35,6 +55,19 @@ export async function POST(request) {
         { status: 400 }
       );
     }
+
+    // Try backend
+    try {
+      const backendRes = await fetch(`${BACKEND_URL}/api/heads`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      if (backendRes.ok) {
+        const data = await backendRes.json();
+        return NextResponse.json(data);
+      }
+    } catch (e) {}
 
     const created = addOfficeBearer(body);
     return NextResponse.json({
@@ -58,6 +91,19 @@ export async function PATCH(request) {
         { status: 400 }
       );
     }
+
+    // Try backend
+    try {
+      const backendRes = await fetch(`${BACKEND_URL}/api/heads/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedFields)
+      });
+      if (backendRes.ok) {
+        const data = await backendRes.json();
+        return NextResponse.json(data);
+      }
+    } catch (e) {}
 
     const updated = updateOfficeBearer(id, updatedFields);
     if (!updated) {
@@ -88,6 +134,17 @@ export async function DELETE(request) {
         { status: 400 }
       );
     }
+
+    // Try backend
+    try {
+      const backendRes = await fetch(`${BACKEND_URL}/api/heads/${id}`, {
+        method: 'DELETE'
+      });
+      if (backendRes.ok) {
+        const data = await backendRes.json();
+        return NextResponse.json(data);
+      }
+    } catch (e) {}
 
     const deleted = deleteOfficeBearer(id);
     if (!deleted) {

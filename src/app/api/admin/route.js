@@ -1,8 +1,21 @@
 import { NextResponse } from 'next/server';
 import { getAllMembers, updateMemberStatus } from '@/lib/serverStore';
 
+const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
+
 export async function GET() {
   try {
+    // Try fetching from Backend API (Supabase)
+    try {
+      const backendRes = await fetch(`${BACKEND_URL}/api/members`);
+      if (backendRes.ok) {
+        const data = await backendRes.json();
+        return NextResponse.json(data);
+      }
+    } catch (err) {
+      console.warn('Backend API unavailable for admin GET, using local store:', err.message);
+    }
+
     const members = getAllMembers();
 
     // Compute statistics
@@ -59,6 +72,25 @@ export async function PATCH(request) {
         { success: false, message: 'applicationNo and status are required' },
         { status: 400 }
       );
+    }
+
+    // Try updating via Backend API (Supabase)
+    try {
+      const backendRes = await fetch(`${BACKEND_URL}/api/members/${applicationNo}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status, reason: rejectionReason })
+      });
+      if (backendRes.ok) {
+        const data = await backendRes.json();
+        return NextResponse.json({
+          success: true,
+          message: `Status updated to ${status}`,
+          member: data.member
+        });
+      }
+    } catch (err) {
+      console.warn('Backend API unavailable for admin PATCH, using local fallback:', err.message);
     }
 
     const updated = updateMemberStatus(applicationNo, status, rejectionReason);

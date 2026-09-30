@@ -27,6 +27,10 @@ yarn-error.log*
 .env*
 !.env.example
 
+# auto-generated data files
+src/data/members_db.json
+src/data/office_bearers.json
+
 # vercel
 .vercel
 
