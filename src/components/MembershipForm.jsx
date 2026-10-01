@@ -346,35 +346,68 @@ export default function MembershipForm({ onSuccess }) {
     <div className="bg-white rounded-2xl sm:rounded-3xl p-3.5 sm:p-8 lg:p-10 border border-slate-200 shadow-xl max-w-4xl mx-auto my-3 sm:my-8">
       {/* Form Header */}
       <div className="border-b border-slate-200 pb-4 sm:pb-6 mb-6 sm:mb-8">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
-          <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-            <ApraLogo className="w-11 h-11 sm:w-16 sm:h-16 flex-shrink-0" />
+        <div className="flex flex-col sm:flex-row items-start justify-between gap-4 sm:gap-6">
+          <div className="flex items-start gap-3 sm:gap-4 min-w-0 flex-1">
+            <ApraLogo className="w-12 h-12 sm:w-20 sm:h-20 flex-shrink-0 mt-1" />
             <div className="min-w-0 flex-1">
-              <span className="text-[9px] sm:text-xs font-mono font-bold text-sky-700 uppercase tracking-widest block truncate">
+              <span className="text-[10px] sm:text-xs font-mono font-bold text-sky-700 uppercase tracking-widest block truncate">
                 {ASSOCIATION_INFO.regdNo}
               </span>
-              <h2 className="text-xs sm:text-xl font-bold text-slate-900 font-sans leading-tight break-words">
+              <h2 className="text-sm sm:text-2xl font-bold text-slate-900 font-sans leading-tight break-words mt-1">
                 {ASSOCIATION_INFO.nameTamil}
               </h2>
-              <h3 className="text-[9px] sm:text-xs font-semibold text-slate-600 tracking-wide leading-tight block break-words mt-0.5">
+              <h3 className="text-[10px] sm:text-sm font-semibold text-slate-600 tracking-wide leading-tight block break-words mt-1">
                 ASSOCIATION FOR PONNAPPANADAR NAGER RESIDENTS AMENITY (APRA)
               </h3>
-              <p className="text-[9px] sm:text-xs text-slate-500 mt-0.5 truncate">
+              <p className="text-[10px] sm:text-xs text-slate-500 mt-1 truncate">
                 Ponnappa Nadar Nagar, Nagercoil - 629 004.
               </p>
+              
+              <div className="mt-3 inline-block bg-sky-50 border border-sky-200 px-3 py-1 rounded-lg">
+                <div className="text-[10px] sm:text-[11px] font-bold text-sky-800 uppercase tracking-wider">Membership Form</div>
+              </div>
             </div>
           </div>
           
-          <div className="bg-sky-50 border border-sky-200 px-3 py-1.5 sm:p-3 rounded-xl sm:rounded-2xl text-left sm:text-right w-full sm:w-auto flex sm:flex-col justify-between sm:justify-center items-center sm:items-end">
-            <div>
-              <div className="text-[10px] sm:text-[11px] font-bold text-sky-800 uppercase tracking-wider">Membership Form</div>
-              <div className="text-xs sm:text-xl font-black text-sky-700">Open & Active</div>
+          {/* Header Photo Upload Area */}
+          <div className="flex-shrink-0 w-full sm:w-32 md:w-36 flex flex-col justify-start">
+            <div className="border-2 border-dashed border-slate-300 rounded-xl p-2 text-center bg-slate-50/70 flex flex-col items-center justify-center min-h-[140px] sm:min-h-[160px] h-full">
+              {formData.photoDataUrl ? (
+                <div className="relative group flex items-center justify-center w-full h-full">
+                  <img
+                    src={formData.photoDataUrl}
+                    alt="Member Preview"
+                    className="w-full h-full max-w-[120px] max-h-[140px] object-cover rounded-lg shadow-sm border border-slate-200"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setFormData((prev) => ({ ...prev, photoDataUrl: '' }))}
+                    className="absolute -top-2 -right-2 bg-rose-600 text-white p-1 rounded-full text-xs shadow-md hover:bg-rose-700 active:scale-90"
+                    title="Remove Photo"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              ) : (
+                <label className="cursor-pointer flex flex-col items-center justify-center w-full h-full py-2">
+                  <Upload className="w-5 h-5 text-sky-600 mb-1.5 opacity-70" />
+                  <span className="text-[10px] sm:text-xs font-bold text-slate-700 block">Applicant Photo</span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handlePhotoUpload}
+                    className="hidden"
+                  />
+                  <span className="mt-2 text-[9px] px-2 py-1 bg-white border border-slate-200 rounded text-sky-700 hover:bg-slate-50">
+                    Upload
+                  </span>
+                </label>
+              )}
             </div>
-            <div className="text-[9px] sm:text-[10px] text-slate-500">Official Resident Enrollment</div>
           </div>
         </div>
 
-        <div className="mt-3 sm:mt-4 p-2.5 sm:p-3 bg-sky-50 rounded-xl border border-sky-100 text-[11px] sm:text-xs text-sky-900 flex items-center gap-2">
+        <div className="mt-4 p-2.5 sm:p-3 bg-sky-50 rounded-xl border border-sky-100 text-[11px] sm:text-xs text-sky-900 flex items-center gap-2">
           <Sparkles className="w-4 h-4 text-sky-600 flex-shrink-0" />
           <span>
             <strong>Eligibility:</strong> Open to all residents (Owners & Tenants) of Ponnappanadar Nagar, Nagercoil.
@@ -444,97 +477,57 @@ export default function MembershipForm({ onSuccess }) {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 items-start">
-            <div className="md:col-span-2 space-y-3.5 sm:space-y-4">
-              
-              {/* Applicant Name */}
-              <div>
-                <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-                  Full Name (விண்ணப்பதாரர் பெயர்) *
+          <div className="space-y-3.5 sm:space-y-4">
+            {/* Applicant Name */}
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
+                Full Name (விண்ணப்பதாரர் பெயர்) *
+              </label>
+              <input
+                type="text"
+                name="fullName"
+                placeholder="e.g. K.S. MURUGESAN"
+                value={formData.fullName}
+                onChange={handleChange}
+                required
+                className="w-full px-3.5 py-2.5 sm:py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 text-base sm:text-sm font-semibold uppercase bg-slate-50/50 focus:bg-white"
+              />
+            </div>
+
+            {/* Age and Gender in 2 cols - Equalized Label Heights */}
+            <div className="grid grid-cols-2 gap-3 items-end">
+              <div className="flex flex-col justify-end">
+                <label className="text-[11px] sm:text-xs font-bold text-slate-700 uppercase tracking-wider mb-1 min-h-[1.75rem] flex items-end leading-tight">
+                  Age (வயது) *
                 </label>
                 <input
-                  type="text"
-                  name="fullName"
-                  placeholder="e.g. K.S. MURUGESAN"
-                  value={formData.fullName}
+                  type="number"
+                  name="age"
+                  placeholder="e.g. 67"
+                  value={formData.age}
                   onChange={handleChange}
+                  min="18"
+                  max="110"
                   required
-                  className="w-full px-3.5 py-2.5 sm:py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 text-base sm:text-sm font-semibold uppercase bg-slate-50/50 focus:bg-white"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 text-base sm:text-sm bg-slate-50/50 focus:bg-white"
                 />
               </div>
 
-              {/* Age and Gender in 2 cols - Equalized Label Heights */}
-              <div className="grid grid-cols-2 gap-3 items-end">
-                <div className="flex flex-col justify-end">
-                  <label className="text-[11px] sm:text-xs font-bold text-slate-700 uppercase tracking-wider mb-1 min-h-[1.75rem] flex items-end leading-tight">
-                    Age (வயது) *
-                  </label>
-                  <input
-                    type="number"
-                    name="age"
-                    placeholder="e.g. 67"
-                    value={formData.age}
-                    onChange={handleChange}
-                    min="18"
-                    max="110"
-                    required
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 text-base sm:text-sm bg-slate-50/50 focus:bg-white"
-                  />
-                </div>
-
-                <div className="flex flex-col justify-end">
-                  <label className="text-[11px] sm:text-xs font-bold text-slate-700 uppercase tracking-wider mb-1 min-h-[1.75rem] flex items-end leading-tight">
-                    Gender (பாலினம்) *
-                  </label>
-                  <select
-                    name="gender"
-                    value={formData.gender}
-                    onChange={handleChange}
-                    className="w-full px-3 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 text-base sm:text-sm bg-slate-50/50 focus:bg-white"
-                  >
-                    <option value="Male">Male (ஆண்)</option>
-                    <option value="Female">Female (பெண்)</option>
-                    <option value="Other">Other</option>
-                  </select>
-                </div>
-              </div>
-
-            </div>
-
-            {/* Passport Photo Upload Box */}
-            <div className="border-2 border-dashed border-slate-300 rounded-2xl p-4 text-center bg-slate-50/70 flex flex-col items-center justify-center min-h-[160px] sm:min-h-[200px]">
-              {formData.photoDataUrl ? (
-                <div className="relative group">
-                  <img
-                    src={formData.photoDataUrl}
-                    alt="Member Preview"
-                    className="w-28 h-32 sm:w-32 sm:h-36 object-cover rounded-xl shadow-md border-2 border-white"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setFormData((prev) => ({ ...prev, photoDataUrl: '' }))}
-                    className="absolute -top-2 -right-2 bg-rose-600 text-white p-1 rounded-full text-xs shadow-md hover:bg-rose-700 active:scale-90"
-                    title="Remove Photo"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              ) : (
-                <label className="cursor-pointer flex flex-col items-center w-full py-2">
-                  <Upload className="w-7 h-7 text-sky-600 mb-1.5 animate-pulse" />
-                  <span className="text-xs font-bold text-slate-800 block">Upload Photo</span>
-                  <span className="text-[10px] text-slate-500 block mt-0.5">Passport photo (JPG/PNG)</span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handlePhotoUpload}
-                    className="hidden"
-                  />
-                  <span className="mt-2.5 px-3 py-1 bg-white border border-slate-300 rounded-lg text-xs font-semibold text-sky-700 shadow-2xs hover:bg-slate-50">
-                    Select File / Camera
-                  </span>
+              <div className="flex flex-col justify-end">
+                <label className="text-[11px] sm:text-xs font-bold text-slate-700 uppercase tracking-wider mb-1 min-h-[1.75rem] flex items-end leading-tight">
+                  Gender (பாலினம்) *
                 </label>
-              )}
+                <select
+                  name="gender"
+                  value={formData.gender}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 text-base sm:text-sm bg-slate-50/50 focus:bg-white"
+                >
+                  <option value="Male">Male (ஆண்)</option>
+                  <option value="Female">Female (பெண்)</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
             </div>
           </div>
         </div>

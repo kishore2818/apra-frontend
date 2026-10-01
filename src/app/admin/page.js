@@ -482,7 +482,6 @@ function doPost(e) {
               { id: 'MEMBERS', label: 'Membership Register' },
               { id: 'HEADS', label: 'Office Bearers' },
               { id: 'ANALYTICS', label: 'Demographics & Charts' },
-              { id: 'SHEETS', label: 'Google Sheets Setup' },
             ].map((tab) => (
               <button
                 key={tab.id}
