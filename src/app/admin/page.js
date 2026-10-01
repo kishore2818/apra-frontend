@@ -1240,15 +1240,6 @@ function doPost(e) {
                   <div className="text-[11px] text-slate-500 font-mono tracking-widest font-semibold border-b border-slate-300 pb-1">
                     Date: {selectedMember.submissionDate}
                   </div>
-                  {selectedMember.photoDataUrl && (
-                    <div className="w-24 h-28 border-2 border-slate-300 rounded overflow-hidden shadow-sm bg-slate-50 flex items-center justify-center p-1">
-                      <img 
-                        src={selectedMember.photoDataUrl} 
-                        alt="Member Photo" 
-                        className="w-full h-full object-cover rounded-sm"
-                      />
-                    </div>
-                  )}
                 </div>
               </div>
 
@@ -1260,34 +1251,46 @@ function doPost(e) {
                 "Membership to this association is open to all residents of Ponnappanadar Nagar"
               </div>
 
-              <div className="grid grid-cols-2 gap-4 text-xs">
-                <div>
-                  <strong>Applicant Name:</strong> {selectedMember.fullName}
+              <div className="flex flex-col sm:flex-row gap-6 items-start">
+                <div className="flex-1 grid grid-cols-2 gap-4 text-xs w-full">
+                  <div>
+                    <strong>Applicant Name:</strong> {selectedMember.fullName}
+                  </div>
+                  <div>
+                    <strong>Resident Status:</strong> {selectedMember.residentType}
+                  </div>
+                  <div>
+                    <strong>Age / Gender:</strong> {selectedMember.age} yrs / {selectedMember.gender}
+                  </div>
+                  <div>
+                    <strong>Plot / Layout No:</strong> {selectedMember.layoutPlotNo || 'N/A'}
+                  </div>
+                  <div>
+                    <strong>Door No (Old / New):</strong> {selectedMember.doorNoOld || '-'} / {selectedMember.doorNoNew || '-'}
+                  </div>
+                  <div>
+                    <strong>Street:</strong> {selectedMember.street}
+                  </div>
+                  <div className="col-span-2">
+                    <strong>Mailing Address:</strong> {selectedMember.mailingAddress}
+                  </div>
+                  <div>
+                    <strong>Cell Phone:</strong> {selectedMember.phone}
+                  </div>
+                  <div>
+                    <strong>Email:</strong> {selectedMember.email || 'N/A'}
+                  </div>
                 </div>
-                <div>
-                  <strong>Resident Status:</strong> {selectedMember.residentType}
-                </div>
-                <div>
-                  <strong>Age / Gender:</strong> {selectedMember.age} yrs / {selectedMember.gender}
-                </div>
-                <div>
-                  <strong>Plot / Layout No:</strong> {selectedMember.layoutPlotNo || 'N/A'}
-                </div>
-                <div>
-                  <strong>Door No (Old / New):</strong> {selectedMember.doorNoOld || '-'} / {selectedMember.doorNoNew || '-'}
-                </div>
-                <div>
-                  <strong>Street:</strong> {selectedMember.street}
-                </div>
-                <div className="col-span-2">
-                  <strong>Mailing Address:</strong> {selectedMember.mailingAddress}
-                </div>
-                <div>
-                  <strong>Cell Phone:</strong> {selectedMember.phone}
-                </div>
-                <div>
-                  <strong>Email:</strong> {selectedMember.email || 'N/A'}
-                </div>
+                
+                {selectedMember.photoDataUrl && (
+                  <div className="w-28 h-36 flex-shrink-0 border-2 border-slate-300 rounded-lg overflow-hidden shadow-sm bg-slate-50 flex items-center justify-center p-1 self-start">
+                    <img 
+                      src={selectedMember.photoDataUrl} 
+                      alt="Member Photo" 
+                      className="w-full h-full object-cover rounded-md"
+                    />
+                  </div>
+                )}
               </div>
 
               {/* Family members table */}
