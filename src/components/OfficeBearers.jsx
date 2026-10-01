@@ -59,7 +59,6 @@ export default function OfficeBearers() {
   const legalAdvisors = bearersList.filter((b) => b.role.includes('Legal'));
   const generalAdvisors = bearersList.filter((b) => b.role.includes('General'));
 
-  // Helper Card Component for individual member
   const MemberCard = ({ bearer, compact = false }) => {
     const isLegal = bearer.role.includes('Legal');
     
@@ -74,107 +73,68 @@ export default function OfficeBearers() {
       .join('')
       .toUpperCase();
 
-    // Compact mode: vertical stack for 3-column mobile grid
-    if (compact) {
-      return (
-        <div className="bg-white rounded-2xl p-2.5 sm:p-5 border border-slate-200/90 shadow-xs hover:shadow-md transition-all flex flex-col items-center text-center space-y-2">
-          {/* Avatar */}
+    return (
+      <div className={`relative overflow-hidden group bg-white/80 backdrop-blur-md rounded-2xl border border-slate-200/60 shadow-sm hover:shadow-xl hover:border-sky-300 transition-all duration-500 ${compact ? 'p-3 flex flex-col items-center text-center' : 'p-4 flex flex-col sm:flex-row items-center sm:items-start gap-4'}`}>
+        
+        {/* Subtle background glow effect */}
+        <div className="absolute -inset-2 bg-gradient-to-r from-sky-100/50 via-emerald-50/50 to-purple-100/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[2rem] blur-xl pointer-events-none" />
+
+        {/* Top: Avatar */}
+        <div className="relative z-10 flex-shrink-0">
           {bearer.avatar ? (
             <img
               src={bearer.avatar}
               alt={bearer.name}
-              className="w-10 h-10 sm:w-16 sm:h-16 rounded-full object-cover border-2 border-slate-100 shadow-xs flex-shrink-0"
+              className={`${compact ? 'w-14 h-14' : 'w-16 h-16 sm:w-20 sm:h-20'} rounded-[1rem] object-cover shadow-sm group-hover:scale-105 group-hover:rotate-1 transition-transform duration-500`}
             />
           ) : isLegal ? (
-            <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center font-bold flex-shrink-0 shadow-inner">
-              <Scale className="w-5 h-5 sm:w-6 sm:h-6" />
+            <div className={`${compact ? 'w-14 h-14' : 'w-16 h-16 sm:w-20 sm:h-20'} rounded-[1rem] bg-gradient-to-br from-purple-100 to-purple-50 text-purple-600 flex items-center justify-center font-bold shadow-inner group-hover:scale-105 group-hover:-rotate-1 transition-transform duration-500`}>
+              <Scale className={`${compact ? 'w-6 h-6' : 'w-8 h-8'} opacity-80`} />
             </div>
           ) : (
-            <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-sky-100 text-sky-800 flex items-center justify-center font-bold text-xs sm:text-base flex-shrink-0 shadow-inner">
+            <div className={`${compact ? 'w-14 h-14' : 'w-16 h-16 sm:w-20 sm:h-20'} rounded-[1rem] bg-gradient-to-br from-sky-100 to-blue-50 text-sky-900 flex items-center justify-center font-bold text-lg shadow-inner group-hover:scale-105 group-hover:-rotate-1 transition-transform duration-500`}>
               {initials || 'AP'}
             </div>
           )}
-
-          {/* Name & Role */}
-          <div className="w-full min-w-0">
-            <h4 className="text-[10px] sm:text-sm font-bold text-slate-900 leading-snug line-clamp-2">
-              {bearer.name}
-            </h4>
-            <p className="text-[9px] sm:text-xs font-medium text-slate-500 mt-0.5 line-clamp-1">
-              {bearer.role}
-            </p>
-          </div>
-
-          {/* Icon-only action buttons */}
-          <div className="flex gap-1.5 pt-1 border-t border-slate-100 w-full justify-center">
-            <a
-              href={`tel:${bearer.phone}`}
-              className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-sky-50 text-sky-700 hover:bg-sky-100 border border-sky-200/80 active:scale-95 transition-colors"
-              title={`Call ${bearer.phone}`}
-            >
-              <Phone className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-            </a>
-            <a
-              href={`https://wa.me/91${bearer.phone.replace(/\D/g, '')}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white shadow-xs active:scale-95 transition-colors"
-              title="WhatsApp"
-            >
-              <MessageCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-            </a>
-          </div>
         </div>
-      );
-    }
-
-    // Default (full) card layout
-    return (
-      <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col items-center space-y-3 group text-center">
-        {/* Top: Avatar */}
-        {bearer.avatar ? (
-          <img
-            src={bearer.avatar}
-            alt={bearer.name}
-            className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover shadow-sm group-hover:scale-105 transition-transform duration-300"
-          />
-        ) : isLegal ? (
-          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center font-bold shadow-sm group-hover:scale-105 transition-transform duration-300">
-            <Scale className="w-6 h-6 sm:w-8 sm:h-8" />
-          </div>
-        ) : (
-          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-sky-100/60 text-sky-900 flex items-center justify-center font-bold text-lg shadow-sm group-hover:scale-105 transition-transform duration-300">
-            {initials || 'AP'}
-          </div>
-        )}
 
         {/* Member Details */}
-        <div className="w-full">
-          <h4 className="text-sm sm:text-base font-bold text-slate-900 leading-snug">
+        <div className={`relative z-10 flex-1 min-w-0 ${compact ? 'w-full mt-2' : 'text-center sm:text-left mt-2 sm:mt-0'}`}>
+          <h4 className="text-sm sm:text-base font-extrabold text-slate-900 leading-tight">
             {bearer.name}
           </h4>
-          <p className="text-[11px] sm:text-xs font-medium text-slate-500 mt-1">
+          <p className="text-[11px] sm:text-xs font-semibold text-sky-700/80 mt-1 uppercase tracking-wider">
             {bearer.role}
           </p>
+          
+          {/* Phone Display (Hidden in compact mobile view) */}
+          {!compact && (
+            <div className="hidden sm:flex items-center gap-1.5 mt-2 text-xs text-slate-500 font-mono">
+              <Phone className="w-3.5 h-3.5 opacity-60" />
+              <span>{bearer.phone}</span>
+            </div>
+          )}
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center justify-center gap-2 pt-2 w-full">
+        <div className={`relative z-10 flex items-center justify-center gap-2 ${compact ? 'pt-3 w-full' : 'pt-3 sm:pt-0 sm:flex-col lg:flex-row sm:self-center'}`}>
           <a
             href={`tel:${bearer.phone}`}
-            className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-sky-50 text-sky-700 hover:bg-sky-100 font-semibold text-[11px] sm:text-xs transition-colors border border-sky-100 active:scale-95"
+            className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 py-2 px-3.5 rounded-xl bg-slate-50 text-slate-700 hover:bg-sky-500 hover:text-white hover:shadow-lg hover:shadow-sky-500/20 font-bold text-[11px] sm:text-xs transition-all duration-300 border border-slate-200 hover:border-sky-500 active:scale-95"
+            title={`Call ${bearer.phone}`}
           >
             <Phone className="w-3.5 h-3.5" />
-            <span>Call</span>
+            <span className={compact ? 'hidden' : 'inline'}>Call</span>
           </a>
           <a
             href={`https://wa.me/91${bearer.phone.replace(/\D/g, '')}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-[#0F9D58] hover:bg-[#0b8248] text-white font-semibold text-[11px] sm:text-xs transition-colors active:scale-95"
+            className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 py-2 px-3.5 rounded-xl bg-emerald-50 text-emerald-700 hover:bg-emerald-500 hover:text-white hover:shadow-lg hover:shadow-emerald-500/20 font-bold text-[11px] sm:text-xs transition-all duration-300 border border-emerald-200 hover:border-emerald-500 active:scale-95"
+            title="WhatsApp"
           >
             <MessageCircle className="w-3.5 h-3.5" />
-            <span className="hidden xs:inline sm:inline">WhatsApp</span>
+            <span className={compact ? 'hidden' : 'hidden lg:inline'}>WhatsApp</span>
           </a>
         </div>
       </div>
@@ -182,12 +142,20 @@ export default function OfficeBearers() {
   };
 
   return (
-    <section id="heads" className="py-12 sm:py-20 bg-slate-50/70 relative scroll-mt-28 sm:scroll-mt-32">
-      <div className="max-w-6xl mx-auto px-3.5 sm:px-6 lg:px-8 space-y-8 sm:space-y-10">
+    <section id="heads" className="py-12 sm:py-20 relative scroll-mt-28 sm:scroll-mt-32 overflow-hidden bg-slate-50">
+      
+      {/* Decorative Background Elements */}
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-sky-200/40 rounded-full blur-3xl opacity-50" />
+        <div className="absolute top-1/3 -left-40 w-96 h-96 bg-purple-200/40 rounded-full blur-3xl opacity-50" />
+        <div className="absolute bottom-0 right-1/4 w-[30rem] h-[30rem] bg-emerald-200/30 rounded-full blur-3xl opacity-50" />
+      </div>
+
+      <div className="relative z-10 max-w-6xl mx-auto px-3.5 sm:px-6 lg:px-8 space-y-8 sm:space-y-12">
         
         {/* Section Header */}
-        <div className="text-center space-y-1.5 sm:space-y-2">
-          <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+        <div className="text-center space-y-2 sm:space-y-3">
+          <h2 className="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">
             Committee Members
           </h2>
           <p className="text-xs sm:text-base text-slate-500 font-medium">
@@ -256,66 +224,53 @@ export default function OfficeBearers() {
         {/* 1. FEATURED PRESIDENT CARD (Matching Reference Image)   */}
         {/* ======================================================== */}
         {president && matchesSearchOrFilter(president) && (
-          <div className="relative rounded-3xl border-2 border-amber-300/90 bg-gradient-to-r from-amber-50/60 via-white to-amber-50/30 p-5 sm:p-8 shadow-sm">
+          <div className="relative rounded-[2.5rem] bg-white/80 backdrop-blur-md border border-amber-200/50 p-6 sm:p-10 shadow-lg hover:shadow-2xl hover:border-amber-300 transition-all duration-700 overflow-hidden group">
+            
+            {/* Background Glow */}
+            <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-amber-400/20 rounded-full blur-3xl opacity-50 group-hover:opacity-100 transition-opacity duration-700" />
             
             {/* Crown Badge */}
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-[11px] sm:text-xs font-black uppercase tracking-wider mb-4 border border-amber-300/60 shadow-2xs">
-              <Crown className="w-3.5 h-3.5 text-amber-600 fill-amber-500" />
+            <div className="relative z-10 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-amber-200 to-amber-100 text-amber-900 text-xs sm:text-sm font-black uppercase tracking-widest mb-6 shadow-sm ring-1 ring-amber-300/50">
+              <Crown className="w-4 h-4 text-amber-600 fill-amber-500" />
               <span>PRESIDENT</span>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-8">
+            <div className="relative z-10 flex flex-col sm:flex-row items-center sm:items-center gap-6 sm:gap-10">
               {/* President Photo */}
               <div className="relative flex-shrink-0">
+                <div className="absolute inset-0 bg-amber-400 rounded-full blur group-hover:blur-md transition-all duration-500 opacity-30" />
                 <img
                   src={president.avatar || '/images/president.jpg'}
                   alt={president.name}
-                  className="w-24 h-24 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-white shadow-md ring-2 ring-amber-300"
+                  className="relative w-32 h-32 sm:w-40 sm:h-40 rounded-full object-cover border-4 border-white shadow-xl group-hover:scale-105 group-hover:rotate-2 transition-transform duration-700"
                 />
               </div>
 
               {/* President Information */}
-              <div className="text-center sm:text-left space-y-2 flex-1 min-w-0">
-                <h3 className="text-xl sm:text-2xl font-black text-slate-900">
+              <div className="text-center sm:text-left space-y-3 flex-1 min-w-0">
+                <h3 className="text-2xl sm:text-4xl font-extrabold text-slate-900 bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-700">
                   {president.name}
                 </h3>
                 
-                <div className="space-y-0.5">
-                  <p className="text-sm font-bold text-slate-700">President</p>
-                  <p className="text-xs text-slate-500">APRA Leadership Council</p>
-                </div>
-
-                {/* Phone & Copy Button */}
-                <div className="inline-flex items-center justify-center sm:justify-start gap-2 text-sm font-mono font-bold text-slate-800 pt-1">
-                  <Phone className="w-4 h-4 text-slate-500" />
-                  <span>{president.phone}</span>
-                  <button
-                    onClick={() => handleCopy(president.phone)}
-                    className="p-1 text-slate-400 hover:text-slate-800 active:scale-90"
-                    title="Copy Phone"
-                  >
-                    {copiedPhone === president.phone ? (
-                      <Check className="w-4 h-4 text-emerald-600" />
-                    ) : (
-                      <Copy className="w-4 h-4" />
-                    )}
-                  </button>
+                <div className="space-y-1">
+                  <p className="text-base font-bold text-amber-600 uppercase tracking-widest">President</p>
+                  <p className="text-sm text-slate-500 font-medium">APRA Leadership Council</p>
                 </div>
 
                 {/* President Action Buttons */}
-                <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 pt-3">
+                <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4 pt-4">
                   <a
                     href={`tel:${president.phone}`}
-                    className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-sky-100 hover:bg-sky-200 text-sky-800 font-bold text-xs sm:text-sm border border-sky-200 active:scale-95 transition-all"
+                    className="inline-flex items-center justify-center gap-2 px-8 py-3 rounded-2xl bg-white hover:bg-slate-50 text-slate-800 font-bold text-sm shadow-md hover:shadow-xl hover:text-sky-600 border border-slate-200 transition-all duration-300 active:scale-95"
                   >
-                    <Phone className="w-4 h-4 text-sky-600" />
+                    <Phone className="w-4 h-4" />
                     <span>Call Now</span>
                   </a>
                   <a
                     href={`https://wa.me/91${president.phone.replace(/\D/g, '')}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs sm:text-sm shadow-sm active:scale-95 transition-all"
+                    className="inline-flex items-center justify-center gap-2 px-8 py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-white font-bold text-sm shadow-lg shadow-emerald-500/30 hover:shadow-xl hover:shadow-emerald-500/40 transition-all duration-300 active:scale-95"
                   >
                     <MessageCircle className="w-4 h-4" />
                     <span>WhatsApp</span>
