@@ -178,9 +178,9 @@ export default function Navbar() {
         )}
       </header>
 
-      {/* Floating Bottom App Navigation Bar for Mobile Users */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-lg border-t border-slate-200 shadow-2xl py-2 px-4 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
-        <div className="grid grid-cols-4 items-center justify-items-center text-center">
+      {/* Floating Bottom App Navigation Bar for Mobile Users (Admin link removed for mobile users) */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-lg border-t border-slate-200 shadow-2xl py-2 px-6 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
+        <div className="grid grid-cols-3 items-center justify-items-center text-center">
           <Link
             href="/"
             className={`flex flex-col items-center gap-1 transition-colors ${
@@ -210,18 +210,9 @@ export default function Navbar() {
             </div>
             <span className="text-[10px] font-bold text-sky-700">Apply</span>
           </Link>
-
-          <Link
-            href="/admin"
-            className={`flex flex-col items-center gap-1 transition-colors ${
-              isAdminPage ? 'text-amber-600 font-bold' : 'text-slate-500 hover:text-slate-900'
-            }`}
-          >
-            <Shield className="w-5 h-5" />
-            <span className="text-[10px] font-medium">Admin</span>
-          </Link>
         </div>
       </div>
     </>
   );
 }
+

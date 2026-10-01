@@ -26,12 +26,16 @@ export default function Home() {
         </section>
 
         {/* Association Objectives & Community Focus */}
-        <section id="about" className="py-12 sm:py-20 bg-white border-b border-slate-200 scroll-mt-28 sm:scroll-mt-32">
-          <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8">
+        <section id="about" className="py-12 sm:py-20 bg-white border-b border-slate-200 scroll-mt-28 sm:scroll-mt-32 relative overflow-hidden">
+          {/* Subtle background animatic elements */}
+          <div className="absolute -top-24 -right-24 w-96 h-96 bg-sky-100/50 rounded-full blur-3xl pointer-events-none animate-pulse-glow" />
+          <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-amber-100/40 rounded-full blur-3xl pointer-events-none animate-pulse-glow" />
+
+          <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 relative z-10">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
               
               <div className="lg:col-span-6 space-y-4 sm:space-y-6">
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-[11px] sm:text-xs font-bold uppercase tracking-wider">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-[11px] sm:text-xs font-bold uppercase tracking-wider shadow-2xs">
                   <ShieldCheck className="w-3.5 h-3.5 text-amber-700" />
                   <span>About Our Association</span>
                 </div>
@@ -49,15 +53,15 @@ export default function Home() {
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 sm:pt-2">
-                  <div className="flex items-start gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-200">
-                    <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                  <div className="flex items-start gap-2.5 p-3.5 rounded-xl bg-slate-50/80 border border-slate-200/80 hover:border-slate-300 hover:shadow-sm transition-all">
+                    <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 shrink-0 mt-0.5" />
                     <div>
                       <h4 className="text-xs sm:text-sm font-bold text-slate-900">Civic Representation</h4>
                       <p className="text-[11px] sm:text-xs text-slate-500">Active dialogue with municipal and utility boards</p>
                     </div>
                   </div>
-                  <div className="flex items-start gap-2.5 p-3 rounded-xl bg-slate-50 border border-slate-200">
-                    <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 flex-shrink-0 mt-0.5" />
+                  <div className="flex items-start gap-2.5 p-3.5 rounded-xl bg-slate-50/80 border border-slate-200/80 hover:border-slate-300 hover:shadow-sm transition-all">
+                    <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 shrink-0 mt-0.5" />
                     <div>
                       <h4 className="text-xs sm:text-sm font-bold text-slate-900">Inclusive Community</h4>
                       <p className="text-[11px] sm:text-xs text-slate-500">Open to both property owners and residing tenants</p>
@@ -66,10 +70,10 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Right: Key Focus Areas Grid */}
+              {/* Right: Key Focus Areas Grid with animatic card hover lift */}
               <div className="lg:col-span-6 grid grid-cols-2 gap-3 sm:gap-4">
-                <div className="p-4 sm:p-6 rounded-2xl bg-gradient-to-br from-sky-50 to-white border border-sky-100 shadow-xs space-y-2.5">
-                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-sky-600 text-white flex items-center justify-center">
+                <div className="p-4 sm:p-6 rounded-2xl bg-gradient-to-br from-sky-50 to-white border border-sky-100 shadow-xs space-y-2.5 hover:-translate-y-1 hover:shadow-md transition-all duration-300">
+                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-sky-600 text-white flex items-center justify-center shadow-xs">
                     <Lightbulb className="w-4 h-4 sm:w-5 sm:h-5" />
                   </div>
                   <h3 className="font-bold text-sm sm:text-base text-slate-900">Street Infrastructure</h3>
@@ -78,8 +82,8 @@ export default function Home() {
                   </p>
                 </div>
 
-                <div className="p-4 sm:p-6 rounded-2xl bg-gradient-to-br from-emerald-50 to-white border border-emerald-100 shadow-xs space-y-2.5">
-                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center">
+                <div className="p-4 sm:p-6 rounded-2xl bg-gradient-to-br from-emerald-50 to-white border border-emerald-100 shadow-xs space-y-2.5 hover:-translate-y-1 hover:shadow-md transition-all duration-300">
+                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-xs">
                     <HeartHandshake className="w-4 h-4 sm:w-5 sm:h-5" />
                   </div>
                   <h3 className="font-bold text-sm sm:text-base text-slate-900">Sanitation & Health</h3>
@@ -88,8 +92,8 @@ export default function Home() {
                   </p>
                 </div>
 
-                <div className="p-4 sm:p-6 rounded-2xl bg-gradient-to-br from-amber-50 to-white border border-amber-100 shadow-xs space-y-2.5">
-                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-bold">
+                <div className="p-4 sm:p-6 rounded-2xl bg-gradient-to-br from-amber-50 to-white border border-amber-100 shadow-xs space-y-2.5 hover:-translate-y-1 hover:shadow-md transition-all duration-300">
+                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-bold shadow-xs">
                     <Building2 className="w-4 h-4 sm:w-5 sm:h-5" />
                   </div>
                   <h3 className="font-bold text-sm sm:text-base text-slate-900">Residents Welfare</h3>
@@ -98,8 +102,8 @@ export default function Home() {
                   </p>
                 </div>
 
-                <div className="p-4 sm:p-6 rounded-2xl bg-gradient-to-br from-purple-50 to-white border border-purple-100 shadow-xs space-y-2.5">
-                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-purple-600 text-white flex items-center justify-center">
+                <div className="p-4 sm:p-6 rounded-2xl bg-gradient-to-br from-purple-50 to-white border border-purple-100 shadow-xs space-y-2.5 hover:-translate-y-1 hover:shadow-md transition-all duration-300">
+                  <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-purple-600 text-white flex items-center justify-center shadow-xs">
                     <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
                   </div>
                   <h3 className="font-bold text-sm sm:text-base text-slate-900">Cultural & Family Unity</h3>
@@ -118,8 +122,11 @@ export default function Home() {
 
         {/* Membership Call to Action Section */}
         <section className="py-12 sm:py-20 bg-gradient-to-r from-slate-900 via-sky-950 to-slate-900 text-white relative overflow-hidden">
+          {/* Animated decorative glow */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-sky-500/10 rounded-full blur-3xl pointer-events-none animate-pulse-glow" />
+
           <div className="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 relative z-10 text-center space-y-4 sm:space-y-6">
-            <span className="px-3 py-1 rounded-full bg-amber-400 text-slate-950 font-bold text-[11px] sm:text-xs uppercase tracking-wider inline-block">
+            <span className="px-3 py-1 rounded-full bg-amber-400 text-slate-950 font-bold text-[11px] sm:text-xs uppercase tracking-wider inline-block shadow-lg">
               Registration Open for 2026-2027
             </span>
 
@@ -134,7 +141,7 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 pt-2 sm:pt-4 max-w-md sm:max-w-none mx-auto">
               <Link
                 href="/membership"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 sm:py-4 rounded-xl sm:rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-sm sm:text-base shadow-xl shadow-amber-500/25 active:scale-98 transition-transform"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 sm:py-4 rounded-xl sm:rounded-2xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-sm sm:text-base shadow-xl shadow-amber-500/25 active:scale-98 transition-all hover:scale-[1.02]"
               >
                 <UserPlus className="w-4 h-4 sm:w-5 sm:h-5" />
                 <span>Fill Membership Form</span>
@@ -142,12 +149,13 @@ export default function Home() {
               </Link>
               <a
                 href="tel:9442636020"
-                className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl sm:rounded-2xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs sm:text-base border border-slate-700 active:scale-98 transition-transform"
+                className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl sm:rounded-2xl bg-slate-800/90 hover:bg-slate-700 text-white font-semibold text-xs sm:text-base border border-slate-700 active:scale-98 transition-all hover:scale-[1.02]"
               >
                 <PhoneCall className="w-4 h-4 text-sky-400" />
                 <span>Call President (9442636020)</span>
               </a>
             </div>
+
 
             <div className="pt-3 sm:pt-6 text-[11px] sm:text-xs text-slate-400">
               Community Enrollment: <span className="text-amber-400 font-bold">Open for all residents</span> • Verified by President, Secretary & Treasurer

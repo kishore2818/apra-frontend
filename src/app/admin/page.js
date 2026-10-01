@@ -1,13 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import ApraLogo from '@/components/ApraLogo';
 import { 
   Users, CheckCircle, Clock, XCircle, Search, Download, 
   Eye, Check, X, Shield, Lock, LogOut, RefreshCw, 
   FileSpreadsheet, ExternalLink, Printer, Copy, CheckCheck,
-  Edit, Trash2, Plus, Crown, Scale, Award, Phone, UserPlus, Sparkles
+  Edit, Trash2, Plus, Crown, Scale, Award, Phone, UserPlus, Sparkles,
+  Filter, SlidersHorizontal, ArrowUpDown, Image as ImageIcon, RotateCcw
 } from 'lucide-react';
 import { 
   PieChart, Pie, Cell, ResponsiveContainer, Tooltip, 
@@ -26,9 +27,14 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
+  const [residentFilter, setResidentFilter] = useState('ALL');
+  const [streetFilter, setStreetFilter] = useState('ALL');
+  const [photoFilter, setPhotoFilter] = useState('ALL');
+  const [sortBy, setSortBy] = useState('newest');
   const [selectedMember, setSelectedMember] = useState(null);
-  const [activeTab, setActiveTab] = useState('MEMBERS'); // 'MEMBERS', 'HEADS', 'ANALYTICS', 'SHEETS'
+  const [activeTab, setActiveTab] = useState('MEMBERS'); // 'MEMBERS', 'HEADS', 'ANALYTICS'
   const [copiedCode, setCopiedCode] = useState(false);
+
 
   // Office Bearers Management State
   const [officeBearers, setOfficeBearers] = useState([]);
@@ -283,22 +289,90 @@ export default function AdminPage() {
     document.body.removeChild(link);
   };
 
-  // Filter members
-  const filteredMembers = members.filter((m) => {
-    const matchesSearch =
-      m.fullName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      m.phone?.includes(searchTerm) ||
-      m.street?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      String(m.applicationNo).includes(searchTerm);
+  // Extract unique streets for filter dropdown
+  const uniqueStreets = useMemo(() => {
+    const set = new Set();
+    members.forEach((m) => {
+      if (m.street && typeof m.street === 'string' && m.street.trim()) {
+        set.add(m.street.trim());
+      }
+    });
+    return Array.from(set).sort();
+  }, [members]);
 
-    const matchesStatus =
-      statusFilter === 'ALL' ||
-      (statusFilter === 'Approved' && m.status === 'Approved') ||
-      (statusFilter === 'Pending' && (m.status === 'Pending Verification' || m.status === 'Pending')) ||
-      (statusFilter === 'Rejected' && m.status === 'Rejected');
+  const hasActiveFilters =
+    searchTerm.trim() !== '' ||
+    statusFilter !== 'ALL' ||
+    residentFilter !== 'ALL' ||
+    streetFilter !== 'ALL' ||
+    photoFilter !== 'ALL' ||
+    sortBy !== 'newest';
 
-    return matchesSearch && matchesStatus;
-  });
+  const resetAllFilters = () => {
+    setSearchTerm('');
+    setStatusFilter('ALL');
+    setResidentFilter('ALL');
+    setStreetFilter('ALL');
+    setPhotoFilter('ALL');
+    setSortBy('newest');
+  };
+
+  // Filter and sort members
+  const filteredMembers = useMemo(() => {
+    return members
+      .filter((m) => {
+        const term = searchTerm.toLowerCase().trim();
+        const matchesSearch =
+          term === '' ||
+          m.fullName?.toLowerCase().includes(term) ||
+          m.phone?.includes(term) ||
+          m.street?.toLowerCase().includes(term) ||
+          m.layoutPlotNo?.toLowerCase().includes(term) ||
+          String(m.applicationNo).includes(term) ||
+          String(m.receiptNo).includes(term);
+
+        const matchesStatus =
+          statusFilter === 'ALL' ||
+          (statusFilter === 'Approved' && m.status === 'Approved') ||
+          (statusFilter === 'Pending' && (m.status === 'Pending Verification' || m.status === 'Pending')) ||
+          (statusFilter === 'Rejected' && m.status === 'Rejected');
+
+        const matchesResident =
+          residentFilter === 'ALL' || m.residentType === residentFilter;
+
+        const matchesStreet =
+          streetFilter === 'ALL' || m.street === streetFilter;
+
+        const hasPhoto = Boolean(m.photoUrl || m.photoDataUrl);
+        const matchesPhoto =
+          photoFilter === 'ALL' ||
+          (photoFilter === 'WITH_PHOTO' && hasPhoto) ||
+          (photoFilter === 'WITHOUT_PHOTO' && !hasPhoto);
+
+        return (
+          matchesSearch &&
+          matchesStatus &&
+          matchesResident &&
+          matchesStreet &&
+          matchesPhoto
+        );
+      })
+      .sort((a, b) => {
+        if (sortBy === 'newest') {
+          return (b.id || b.applicationNo || 0) - (a.id || a.applicationNo || 0);
+        }
+        if (sortBy === 'oldest') {
+          return (a.id || a.applicationNo || 0) - (b.id || b.applicationNo || 0);
+        }
+        if (sortBy === 'name') {
+          return (a.fullName || '').localeCompare(b.fullName || '');
+        }
+        if (sortBy === 'appNo') {
+          return (a.applicationNo || 0) - (b.applicationNo || 0);
+        }
+        return 0;
+      });
+  }, [members, searchTerm, statusFilter, residentFilter, streetFilter, photoFilter, sortBy]);
 
   // Filter office bearers
   const filteredBearers = officeBearers.filter((b) => {
@@ -317,6 +391,7 @@ export default function AdminPage() {
 
     return matchesSearch && matchesCategory;
   });
+
 
   // Analytics chart data
   const pieData = [
@@ -580,35 +655,140 @@ function doPost(e) {
         {/* Tab 1: Member Register Table */}
         {activeTab === 'MEMBERS' && (
           <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-            {/* Search & Status Filters */}
-            <div className="p-4 border-b border-slate-200 bg-slate-50/50 flex flex-col md:flex-row items-center justify-between gap-4">
-              <div className="relative w-full md:w-96 group">
-                <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 group-focus-within:text-sky-500 transition-colors" />
-                <input
-                  type="text"
-                  placeholder="Search members by name, phone, or plot..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-2xl text-sm border-2 border-slate-200 focus:outline-none focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10 bg-white shadow-sm transition-all"
-                />
+            {/* Search & Status Filters Bar */}
+            <div className="p-4 border-b border-slate-200 bg-slate-50/70 space-y-3.5">
+              <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+                {/* Search Input */}
+                <div className="relative w-full md:w-96 group">
+                  <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 group-focus-within:text-sky-500 transition-colors" />
+                  <input
+                    type="text"
+                    placeholder="Search name, phone, plot, street, app #..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl text-sm border border-slate-200 focus:outline-none focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10 bg-white shadow-xs transition-all"
+                  />
+                  {searchTerm && (
+                    <button
+                      onClick={() => setSearchTerm('')}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
+
+                {/* Status Filter Chips */}
+                <div className="flex bg-slate-200/70 p-1 rounded-xl w-full md:w-auto overflow-x-auto shadow-inner no-scrollbar">
+                  {['ALL', 'Approved', 'Pending', 'Rejected'].map((status) => (
+                    <button
+                      key={status}
+                      onClick={() => setStatusFilter(status)}
+                      className={`flex-1 md:flex-none px-3.5 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all duration-200 ${
+                        statusFilter === status
+                          ? 'bg-white text-sky-700 shadow-sm'
+                          : 'text-slate-600 hover:text-slate-900'
+                      }`}
+                    >
+                      {status}
+                    </button>
+                  ))}
+                </div>
               </div>
 
-              <div className="flex bg-slate-200/60 p-1 rounded-xl w-full md:w-auto overflow-x-auto shadow-inner">
-                {['ALL', 'Approved', 'Pending', 'Rejected'].map((status) => (
+              {/* Extra Filtration Toolbar (Resident Type, Street, Photo, Sort) */}
+              <div className="pt-2 border-t border-slate-200/80 flex flex-wrap items-center justify-between gap-2 text-xs">
+                <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+                  {/* Resident Type Filter */}
+                  <div className="flex items-center gap-1 bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 shadow-2xs">
+                    <Filter className="w-3.5 h-3.5 text-slate-400" />
+                    <select
+                      value={residentFilter}
+                      onChange={(e) => setResidentFilter(e.target.value)}
+                      className="bg-transparent font-medium text-slate-700 focus:outline-none cursor-pointer"
+                    >
+                      <option value="ALL">All Resident Types</option>
+                      <option value="Owner">Owners Only</option>
+                      <option value="Tenant">Tenants Only</option>
+                    </select>
+                  </div>
+
+                  {/* Street / Location Filter */}
+                  <div className="flex items-center gap-1 bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 shadow-2xs">
+                    <span className="text-[10px] font-bold text-slate-400 uppercase">Street:</span>
+                    <select
+                      value={streetFilter}
+                      onChange={(e) => setStreetFilter(e.target.value)}
+                      className="bg-transparent font-medium text-slate-700 focus:outline-none cursor-pointer max-w-[140px] truncate"
+                    >
+                      <option value="ALL">All Streets</option>
+                      {uniqueStreets.map((st) => (
+                        <option key={st} value={st}>
+                          {st}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Photo Filter */}
+                  <div className="flex items-center gap-1 bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 shadow-2xs">
+                    <ImageIcon className="w-3.5 h-3.5 text-slate-400" />
+                    <select
+                      value={photoFilter}
+                      onChange={(e) => setPhotoFilter(e.target.value)}
+                      className="bg-transparent font-medium text-slate-700 focus:outline-none cursor-pointer"
+                    >
+                      <option value="ALL">All Photos</option>
+                      <option value="WITH_PHOTO">With Photo Only</option>
+                      <option value="WITHOUT_PHOTO">Without Photo</option>
+                    </select>
+                  </div>
+
+                  {/* Sort By */}
+                  <div className="flex items-center gap-1 bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 shadow-2xs">
+                    <ArrowUpDown className="w-3.5 h-3.5 text-slate-400" />
+                    <select
+                      value={sortBy}
+                      onChange={(e) => setSortBy(e.target.value)}
+                      className="bg-transparent font-medium text-slate-700 focus:outline-none cursor-pointer"
+                    >
+                      <option value="newest">Newest First</option>
+                      <option value="oldest">Oldest First</option>
+                      <option value="name">Name (A-Z)</option>
+                      <option value="appNo">Application No.</option>
+                    </select>
+                  </div>
+
+                  {/* Reset Filters button */}
+                  {hasActiveFilters && (
+                    <button
+                      onClick={resetAllFilters}
+                      className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200 font-bold text-xs transition-colors active:scale-95"
+                    >
+                      <RotateCcw className="w-3.5 h-3.5" />
+                      <span>Reset Filters</span>
+                    </button>
+                  )}
+                </div>
+
+                {/* Right-aligned Stats & Mobile Export CSV Button */}
+                <div className="flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto ml-auto pt-1 sm:pt-0">
+                  <span className="text-slate-500 font-medium">
+                    Showing <strong className="text-slate-900">{filteredMembers.length}</strong> of {members.length}
+                  </span>
+
                   <button
-                    key={status}
-                    onClick={() => setStatusFilter(status)}
-                    className={`px-4 py-2 rounded-lg text-xs font-bold whitespace-nowrap transition-all duration-300 ${
-                      statusFilter === status
-                        ? 'bg-white text-sky-700 shadow-md ring-1 ring-slate-900/5 scale-100'
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/50 scale-95'
-                    }`}
+                    onClick={exportToCSV}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-xs active:scale-95 transition-all ml-auto sm:ml-0"
+                    title="Export currently filtered list to CSV"
                   >
-                    {status}
+                    <Download className="w-3.5 h-3.5" />
+                    <span>Export CSV</span>
                   </button>
-                ))}
+                </div>
               </div>
             </div>
+
 
             {/* Mobile Card List View (< md) */}
             <div className="block md:hidden divide-y divide-slate-100">
@@ -1213,46 +1393,46 @@ function doPost(e) {
             </div>
 
             {/* Document 2 Physical Form Layout Replica */}
-            <div className="p-3 sm:p-6 border-2 border-slate-800 rounded-xl sm:rounded-2xl bg-white text-slate-900 mt-3 sm:mt-4 official-form-paper">
-              <div className="flex items-start justify-between border-b-2 border-slate-800 pb-4">
-                <div className="flex items-center gap-3">
-                  <ApraLogo className="w-14 h-14" />
-                  <div>
-                    <span className="text-xs font-mono font-bold text-slate-600 block">
+            <div className="p-3.5 sm:p-6 border-2 border-slate-800 rounded-xl sm:rounded-2xl bg-white text-slate-900 mt-3 sm:mt-4 official-form-paper">
+              <div className="flex flex-col sm:flex-row items-start justify-between border-b-2 border-slate-800 pb-3 sm:pb-4 gap-3">
+                <div className="flex items-center gap-2.5 sm:gap-4 min-w-0 w-full sm:w-auto">
+                  <ApraLogo className="w-12 h-12 sm:w-16 sm:h-16 print:w-16 print:h-16 shrink-0 aspect-square" />
+                  <div className="min-w-0 flex-1">
+                    <span className="text-[9px] sm:text-xs font-mono font-bold text-slate-600 block">
                       Regd. No. 25/2023 • Receipt No: {selectedMember.receiptNo}
                     </span>
-                    <h3 className="text-base sm:text-lg font-bold">
+                    <h3 className="text-xs sm:text-lg font-bold leading-tight break-words">
                       பொன்னப்பநாடார் நகர் குடியிருப்போர் வசதி மேம்பாட்டு சங்கம்
                     </h3>
-                    <h4 className="text-xs sm:text-sm font-semibold tracking-wider text-sky-800">
+                    <h4 className="text-[9px] sm:text-sm font-semibold tracking-wider text-sky-800 break-words">
                       ASSOCIATION FOR PONNAPPANADAR NAGER RESIDENTS AMENITY (APRA)
                     </h4>
-                    <p className="text-[11px] text-slate-600">
+                    <p className="text-[8px] sm:text-[11px] text-slate-600">
                       Ponnappa Nadar Nagar, Nagercoil - 629 004
                     </p>
                   </div>
                 </div>
-                <div className="flex flex-col items-end gap-3">
-                  <div className="border-2 border-slate-800 px-4 py-2 font-mono text-sm font-black tracking-wider rounded-lg flex flex-col items-center justify-center bg-slate-50">
-                    <span className="text-[10px] text-slate-500 font-sans tracking-normal uppercase">App No</span>
-                    <span className="text-lg">{selectedMember.applicationNo}</span>
+                <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-start gap-2 w-full sm:w-auto shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-200">
+                  <div className="border-2 border-slate-800 px-3 py-1 font-mono text-xs sm:text-sm font-black tracking-wider rounded-lg flex flex-col items-center justify-center bg-slate-50">
+                    <span className="text-[8px] sm:text-[9px] text-slate-500 font-sans tracking-normal uppercase">App No</span>
+                    <span className="text-base sm:text-lg">{selectedMember.applicationNo}</span>
                   </div>
-                  <div className="text-[11px] text-slate-500 font-mono tracking-widest font-semibold border-b border-slate-300 pb-1">
+                  <div className="text-[10px] sm:text-[11px] text-slate-500 font-mono tracking-widest font-semibold border-b border-slate-300 pb-0.5">
                     Date: {selectedMember.submissionDate}
                   </div>
                 </div>
               </div>
 
-              <div className="my-3 text-center font-bold text-sm underline uppercase tracking-wider">
+              <div className="my-3 text-center font-bold text-xs sm:text-sm underline uppercase tracking-wider">
                 MEMBERSHIP APPLICATION
               </div>
 
-              <div className="text-xs text-slate-700 italic mb-4">
+              <div className="text-[11px] sm:text-xs text-slate-700 italic mb-3">
                 "Membership to this association is open to all residents of Ponnappanadar Nagar"
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-6 items-start">
-                <div className="flex-1 grid grid-cols-2 gap-4 text-xs w-full">
+              <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-start">
+                <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-4 text-xs w-full">
                   <div>
                     <strong>Applicant Name:</strong> {selectedMember.fullName}
                   </div>
@@ -1260,7 +1440,7 @@ function doPost(e) {
                     <strong>Resident Status:</strong> {selectedMember.residentType}
                   </div>
                   <div>
-                    <strong>Age / Gender:</strong> {selectedMember.age} yrs / {selectedMember.gender}
+                    <strong>Age / Gender:</strong> {selectedMember.age || 'N/A'} yrs / {selectedMember.gender}
                   </div>
                   <div>
                     <strong>Plot / Layout No:</strong> {selectedMember.layoutPlotNo || 'N/A'}
@@ -1271,7 +1451,7 @@ function doPost(e) {
                   <div>
                     <strong>Street:</strong> {selectedMember.street}
                   </div>
-                  <div className="col-span-2">
+                  <div className="sm:col-span-2">
                     <strong>Mailing Address:</strong> {selectedMember.mailingAddress}
                   </div>
                   <div>
@@ -1282,16 +1462,17 @@ function doPost(e) {
                   </div>
                 </div>
                 
-                {selectedMember.photoDataUrl && (
-                  <div className="w-28 h-36 flex-shrink-0 border-2 border-slate-300 rounded-lg overflow-hidden shadow-sm bg-slate-50 flex items-center justify-center p-1 self-start">
+                {(selectedMember.photoUrl || selectedMember.photoDataUrl) && (
+                  <div className="w-20 h-24 sm:w-28 sm:h-36 print:w-28 print:h-36 shrink-0 border-2 border-slate-300 rounded-lg overflow-hidden shadow-sm bg-slate-50 flex items-center justify-center p-0.5 self-start mx-auto sm:mx-0">
                     <img 
-                      src={selectedMember.photoDataUrl} 
+                      src={selectedMember.photoUrl || selectedMember.photoDataUrl} 
                       alt="Member Photo" 
                       className="w-full h-full object-cover rounded-md"
                     />
                   </div>
                 )}
               </div>
+
 
               {/* Family members table */}
               <div className="mt-4 pt-3 border-t border-slate-300">

@@ -35,9 +35,15 @@ body {
   backdrop-filter: blur(10px);
   border: 1px solid rgba(226, 232, 240, 0.8);
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Smooth marquee animation */
+.glass-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.08), 0 10px 15px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Dynamic Keyframe Animations */
 @keyframes marquee {
   0% { transform: translateX(0%); }
   100% { transform: translateX(-50%); }
@@ -53,6 +59,35 @@ body {
   animation-play-state: paused;
 }
 
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
+.animate-float {
+  animation: floatSlow 4s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 5s ease-in-out infinite;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradientShift 8s ease infinite;
+}
+
 /* Hide scrollbar for mobile carousels & tabs */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
@@ -62,10 +97,15 @@ body {
   scrollbar-width: none;
 }
 
-/* Official form styling for printing and viewing */
+/* Official form styling for printing and PDF generation */
 @media print {
+  @page {
+    margin: 10mm;
+    size: auto;
+  }
   body {
     background: #ffffff !important;
+    color: #000000 !important;
   }
   .no-print {
     display: none !important;
@@ -75,8 +115,11 @@ body {
   }
   .official-form-paper {
     box-shadow: none !important;
-    border: 1px solid #111 !important;
+    border: 1.5px solid #1e293b !important;
     margin: 0 !important;
+    padding: 16px !important;
     width: 100% !important;
+    border-radius: 4px !important;
   }
 }
+

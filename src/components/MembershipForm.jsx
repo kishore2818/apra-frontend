@@ -232,35 +232,35 @@ export default function MembershipForm({ onSuccess }) {
         </div>
 
         {/* Printable Official Form Replica */}
-        <div className="mt-8 p-4 sm:p-8 border-2 border-slate-800 rounded-2xl bg-white text-slate-900 official-form-paper">
-          <div className="flex items-start justify-between border-b-2 border-slate-800 pb-3 sm:pb-4 gap-2">
-            <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
-              <ApraLogo className="w-12 h-12 sm:w-14 sm:h-14 flex-shrink-0" />
-              <div className="min-w-0">
-                <span className="text-[10px] sm:text-xs font-mono font-bold text-slate-600 block">
+        <div className="mt-8 p-3.5 sm:p-8 border-2 border-slate-800 rounded-2xl bg-white text-slate-900 official-form-paper">
+          <div className="flex flex-col sm:flex-row items-start justify-between border-b-2 border-slate-800 pb-3 sm:pb-4 gap-3">
+            <div className="flex items-center gap-2.5 sm:gap-4 min-w-0 w-full sm:w-auto">
+              <ApraLogo className="w-12 h-12 sm:w-16 sm:h-16 print:w-16 print:h-16 shrink-0" />
+              <div className="min-w-0 flex-1">
+                <span className="text-[9px] sm:text-xs font-mono font-bold text-slate-600 block">
                   Regd. No. 25/2023 • Receipt No. {submittedData.receiptNo}
                 </span>
-                <h3 className="text-xs sm:text-lg font-bold leading-tight truncate">
+                <h3 className="text-xs sm:text-lg font-bold leading-tight break-words">
                   {ASSOCIATION_INFO.nameTamil}
                 </h3>
-                <h4 className="text-[10px] sm:text-sm font-semibold tracking-wider text-sky-800 truncate">
+                <h4 className="text-[9px] sm:text-sm font-semibold tracking-wider text-sky-800 break-words">
                   ASSOCIATION FOR PONNAPPANADAR NAGER RESIDENTS AMENITY (APRA)
                 </h4>
-                <p className="text-[9px] sm:text-[11px] text-slate-600 truncate">
+                <p className="text-[8px] sm:text-[11px] text-slate-600">
                   Ponnappa Nadar Nagar, Nagercoil - 629 004
                 </p>
               </div>
             </div>
-            <div className="flex flex-col items-end gap-2 flex-shrink-0">
-              <div className="border-2 border-slate-800 px-3 py-1 font-mono text-sm font-black tracking-wider rounded-lg flex flex-col items-center justify-center bg-slate-50">
-                <span className="text-[9px] text-slate-500 font-sans tracking-normal uppercase">App No</span>
+            <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-start gap-2 w-full sm:w-auto shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-200">
+              <div className="border-2 border-slate-800 px-3 py-1 font-mono text-xs sm:text-sm font-black tracking-wider rounded-lg flex flex-col items-center justify-center bg-slate-50">
+                <span className="text-[8px] sm:text-[9px] text-slate-500 font-sans tracking-normal uppercase">App No</span>
                 <span>{submittedData.applicationNo}</span>
               </div>
-              <div className="text-[10px] sm:text-[11px] text-slate-500 font-mono tracking-widest font-semibold border-b border-slate-300 pb-1">
+              <div className="text-[10px] sm:text-[11px] text-slate-500 font-mono tracking-widest font-semibold border-b border-slate-300 pb-0.5">
                 Date: {submittedData.submissionDate}
               </div>
               {submittedData.photoUrl || submittedData.photoDataUrl ? (
-                <div className="w-20 h-24 sm:w-24 sm:h-28 border-2 border-slate-300 rounded overflow-hidden shadow-sm bg-slate-50 flex items-center justify-center p-1 mt-1">
+                <div className="w-16 h-20 sm:w-24 sm:h-28 print:w-24 print:h-28 border-2 border-slate-300 rounded overflow-hidden shadow-sm bg-slate-50 flex items-center justify-center p-0.5">
                   <img 
                     src={submittedData.photoUrl || submittedData.photoDataUrl} 
                     alt="Member Photo" 
@@ -343,12 +343,12 @@ export default function MembershipForm({ onSuccess }) {
   }
 
   return (
-    <div className="bg-white rounded-2xl sm:rounded-3xl p-3.5 sm:p-8 lg:p-10 border border-slate-200 shadow-xl max-w-4xl mx-auto my-3 sm:my-8">
+    <div className="bg-white rounded-2xl sm:rounded-3xl p-3.5 sm:p-8 lg:p-10 border border-slate-200 shadow-xl max-w-4xl mx-auto my-3 sm:my-8 transition-all duration-300">
       {/* Form Header */}
       <div className="border-b border-slate-200 pb-4 sm:pb-6 mb-6 sm:mb-8">
         <div className="flex flex-col sm:flex-row items-start justify-between gap-4 sm:gap-6">
           <div className="flex items-start gap-3 sm:gap-4 min-w-0 flex-1">
-            <ApraLogo className="w-12 h-12 sm:w-20 sm:h-20 flex-shrink-0 mt-1" />
+            <ApraLogo className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 shrink-0 mt-0.5" />
             <div className="min-w-0 flex-1">
               <span className="text-[10px] sm:text-xs font-mono font-bold text-sky-700 uppercase tracking-widest block truncate">
                 {ASSOCIATION_INFO.regdNo}
@@ -359,19 +359,19 @@ export default function MembershipForm({ onSuccess }) {
               <h3 className="text-[10px] sm:text-sm font-semibold text-slate-600 tracking-wide leading-tight block break-words mt-1">
                 ASSOCIATION FOR PONNAPPANADAR NAGER RESIDENTS AMENITY (APRA)
               </h3>
-              <p className="text-[10px] sm:text-xs text-slate-500 mt-1 truncate">
+              <p className="text-[10px] sm:text-xs text-slate-500 mt-1">
                 Ponnappa Nadar Nagar, Nagercoil - 629 004.
               </p>
               
-              <div className="mt-3 inline-block bg-sky-50 border border-sky-200 px-3 py-1 rounded-lg">
+              <div className="mt-2.5 inline-block bg-sky-50 border border-sky-200 px-3 py-1 rounded-lg">
                 <div className="text-[10px] sm:text-[11px] font-bold text-sky-800 uppercase tracking-wider">Membership Form</div>
               </div>
             </div>
           </div>
           
           {/* Header Photo Upload Area */}
-          <div className="flex-shrink-0 w-full sm:w-32 md:w-36 flex flex-col justify-start">
-            <div className="border-2 border-dashed border-slate-300 rounded-xl p-2 text-center bg-slate-50/70 flex flex-col items-center justify-center min-h-[140px] sm:min-h-[160px] h-full">
+          <div className="w-full sm:w-32 md:w-36 shrink-0 flex flex-col justify-start">
+            <div className="border-2 border-dashed border-slate-300 rounded-xl p-2 text-center bg-slate-50/70 flex flex-col items-center justify-center min-h-[130px] sm:min-h-[150px]">
               {formData.photoDataUrl ? (
                 <div className="relative group flex items-center justify-center w-full h-full">
                   <img
