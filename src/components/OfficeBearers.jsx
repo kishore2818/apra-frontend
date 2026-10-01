@@ -130,74 +130,51 @@ export default function OfficeBearers() {
 
     // Default (full) card layout
     return (
-      <div className="bg-white rounded-2xl p-3 sm:p-5 border border-slate-200/90 shadow-xs hover:shadow-md transition-all flex flex-col justify-between space-y-2.5 sm:space-y-3">
-        {/* Top: Avatar + Name/Role stacked for mobile, side-by-side on sm+ */}
-        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-2 sm:gap-4">
-          {/* Circular Avatar — smaller on mobile */}
-          {bearer.avatar ? (
-            <img
-              src={bearer.avatar}
-              alt={bearer.name}
-              className="w-12 h-12 sm:w-16 sm:h-16 rounded-full object-cover border-2 border-slate-100 shadow-xs flex-shrink-0"
-            />
-          ) : isLegal ? (
-            <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center font-bold flex-shrink-0 shadow-inner">
-              <Scale className="w-5 h-5 sm:w-7 sm:h-7" />
-            </div>
-          ) : (
-            <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-sky-100 text-sky-800 flex items-center justify-center font-bold text-sm sm:text-lg flex-shrink-0 shadow-inner">
-              {initials || 'AP'}
-            </div>
-          )}
-
-          {/* Member Details */}
-          <div className="min-w-0 flex-1 text-center sm:text-left">
-            {/* Name: wraps on mobile instead of truncating */}
-            <h4 className="text-xs sm:text-base font-bold text-slate-900 leading-snug line-clamp-2 sm:line-clamp-none">
-              {bearer.name}
-            </h4>
-            <p className="text-[10px] sm:text-xs font-medium text-slate-500 mt-0.5 line-clamp-1">
-              {bearer.role}
-            </p>
-
-            {/* Phone — hidden on mobile, shown on sm+ */}
-            <div className="hidden sm:flex items-center gap-1.5 mt-1 text-xs text-slate-600 font-mono">
-              <Phone className="w-3 h-3 text-slate-400" />
-              <span>{bearer.phone}</span>
-              <button
-                onClick={() => handleCopy(bearer.phone)}
-                className="p-1 text-slate-400 hover:text-slate-700 active:scale-90 transition-transform"
-                title="Copy phone number"
-              >
-                {copiedPhone === bearer.phone ? (
-                  <Check className="w-3.5 h-3.5 text-emerald-600" />
-                ) : (
-                  <Copy className="w-3.5 h-3.5" />
-                )}
-              </button>
-            </div>
+      <div className="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col items-center space-y-3 group text-center">
+        {/* Top: Avatar */}
+        {bearer.avatar ? (
+          <img
+            src={bearer.avatar}
+            alt={bearer.name}
+            className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover shadow-sm group-hover:scale-105 transition-transform duration-300"
+          />
+        ) : isLegal ? (
+          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center font-bold shadow-sm group-hover:scale-105 transition-transform duration-300">
+            <Scale className="w-6 h-6 sm:w-8 sm:h-8" />
           </div>
+        ) : (
+          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-sky-100/60 text-sky-900 flex items-center justify-center font-bold text-lg shadow-sm group-hover:scale-105 transition-transform duration-300">
+            {initials || 'AP'}
+          </div>
+        )}
+
+        {/* Member Details */}
+        <div className="w-full">
+          <h4 className="text-sm sm:text-base font-bold text-slate-900 leading-snug">
+            {bearer.name}
+          </h4>
+          <p className="text-[11px] sm:text-xs font-medium text-slate-500 mt-1">
+            {bearer.role}
+          </p>
         </div>
 
         {/* Action Buttons */}
-        <div className="grid grid-cols-2 gap-1.5 sm:gap-2 pt-1.5 border-t border-slate-100">
-          {/* Mobile: icon + "Call" short text | sm+: icon + "Call" */}
+        <div className="flex items-center justify-center gap-2 pt-2 w-full">
           <a
             href={`tel:${bearer.phone}`}
-            className="inline-flex items-center justify-center gap-1 sm:gap-1.5 py-2 px-2 sm:px-3 rounded-xl bg-sky-50 text-sky-700 hover:bg-sky-100 font-bold text-xs transition-colors border border-sky-200/80 active:scale-95"
+            className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-sky-50 text-sky-700 hover:bg-sky-100 font-semibold text-[11px] sm:text-xs transition-colors border border-sky-100 active:scale-95"
           >
-            <Phone className="w-3.5 h-3.5 flex-shrink-0" />
-            <span className="truncate">Call</span>
+            <Phone className="w-3.5 h-3.5" />
+            <span>Call</span>
           </a>
-          {/* Mobile: icon + "WA" | sm+: icon + "WhatsApp" */}
           <a
             href={`https://wa.me/91${bearer.phone.replace(/\D/g, '')}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-1 sm:gap-1.5 py-2 px-2 sm:px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition-colors shadow-xs active:scale-95"
+            className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-[#0F9D58] hover:bg-[#0b8248] text-white font-semibold text-[11px] sm:text-xs transition-colors active:scale-95"
           >
-            <MessageCircle className="w-3.5 h-3.5 flex-shrink-0" />
-            <span className="hidden xs:inline sm:inline truncate">WA</span>
+            <MessageCircle className="w-3.5 h-3.5" />
+            <span className="hidden xs:inline sm:inline">WhatsApp</span>
           </a>
         </div>
       </div>

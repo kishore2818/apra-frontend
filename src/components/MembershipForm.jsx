@@ -251,13 +251,23 @@ export default function MembershipForm({ onSuccess }) {
                 </p>
               </div>
             </div>
-            <div className="text-right flex-shrink-0">
-              <div className="border border-slate-400 px-2 sm:px-3 py-0.5 sm:py-1 font-mono text-[10px] sm:text-xs font-bold rounded">
-                App #{submittedData.applicationNo}
+            <div className="flex flex-col items-end gap-2 flex-shrink-0">
+              <div className="border-2 border-slate-800 px-3 py-1 font-mono text-sm font-black tracking-wider rounded-lg flex flex-col items-center justify-center bg-slate-50">
+                <span className="text-[9px] text-slate-500 font-sans tracking-normal uppercase">App No</span>
+                <span>{submittedData.applicationNo}</span>
               </div>
-              <div className="mt-1 text-[9px] sm:text-[10px] text-slate-500 font-mono">
-                {submittedData.submissionDate}
+              <div className="text-[10px] sm:text-[11px] text-slate-500 font-mono tracking-widest font-semibold border-b border-slate-300 pb-1">
+                Date: {submittedData.submissionDate}
               </div>
+              {submittedData.photoUrl || submittedData.photoDataUrl ? (
+                <div className="w-20 h-24 sm:w-24 sm:h-28 border-2 border-slate-300 rounded overflow-hidden shadow-sm bg-slate-50 flex items-center justify-center p-1 mt-1">
+                  <img 
+                    src={submittedData.photoUrl || submittedData.photoDataUrl} 
+                    alt="Member Photo" 
+                    className="w-full h-full object-cover rounded-sm"
+                  />
+                </div>
+              ) : null}
             </div>
           </div>
 

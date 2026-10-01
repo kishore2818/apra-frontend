@@ -582,27 +582,27 @@ function doPost(e) {
         {activeTab === 'MEMBERS' && (
           <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
             {/* Search & Status Filters */}
-            <div className="p-4 border-b border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="relative w-full sm:w-80">
-                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <div className="p-4 border-b border-slate-200 bg-slate-50/50 flex flex-col md:flex-row items-center justify-between gap-4">
+              <div className="relative w-full md:w-96 group">
+                <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 group-focus-within:text-sky-500 transition-colors" />
                 <input
                   type="text"
-                  placeholder="Search by name, phone, plot, street..."
+                  placeholder="Search members by name, phone, or plot..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-9 pr-4 py-2 rounded-xl text-xs sm:text-sm border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 bg-slate-50"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-2xl text-sm border-2 border-slate-200 focus:outline-none focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10 bg-white shadow-sm transition-all"
                 />
               </div>
 
-              <div className="flex items-center gap-2 w-full sm:w-auto overflow-x-auto">
+              <div className="flex bg-slate-200/60 p-1 rounded-xl w-full md:w-auto overflow-x-auto shadow-inner">
                 {['ALL', 'Approved', 'Pending', 'Rejected'].map((status) => (
                   <button
                     key={status}
                     onClick={() => setStatusFilter(status)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors ${
+                    className={`px-4 py-2 rounded-lg text-xs font-bold whitespace-nowrap transition-all duration-300 ${
                       statusFilter === status
-                        ? 'bg-slate-900 text-white'
-                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                        ? 'bg-white text-sky-700 shadow-md ring-1 ring-slate-900/5 scale-100'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/50 scale-95'
                     }`}
                   >
                     {status}
@@ -1150,45 +1150,16 @@ function doPost(e) {
             <div>
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold uppercase tracking-wider mb-2">
                 <FileSpreadsheet className="w-3.5 h-3.5" />
-                <span>Google Sheets & Google Apps Script Integration</span>
+                <span>Google Sheets Integration URL</span>
               </div>
               <h3 className="text-xl font-bold text-slate-900">
-                Sync APRA Member Applications Directly to Google Sheets
+                Active Google Sheets Webhook
               </h3>
-              <p className="text-xs sm:text-sm text-slate-600 mt-1">
-                Follow these 3 simple steps to automatically forward every new membership submission straight to your Google Sheet in real time.
+              <p className="text-xs sm:text-sm text-slate-600 mt-1 mb-4">
+                This URL connects your membership database to the live Google Sheet register.
               </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                <span className="w-6 h-6 rounded-full bg-sky-600 text-white font-bold text-xs flex items-center justify-center mb-2">
-                  1
-                </span>
-                <h4 className="font-bold text-xs text-slate-900">Create a Google Sheet</h4>
-                <p className="text-xs text-slate-500 mt-1">
-                  Open Google Drive, create a new Sheet named "APRA Members Register", and add columns: Timestamp, AppNo, ReceiptNo, Type, Name, Age, Phone, Street, etc.
-                </p>
-              </div>
-
-              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                <span className="w-6 h-6 rounded-full bg-sky-600 text-white font-bold text-xs flex items-center justify-center mb-2">
-                  2
-                </span>
-                <h4 className="font-bold text-xs text-slate-900">Paste Apps Script</h4>
-                <p className="text-xs text-slate-500 mt-1">
-                  In your Google Sheet, click <strong>Extensions &gt; Apps Script</strong>, delete existing code, paste the script below, and click <strong>Deploy &gt; New Deployment &gt; Web app (Anyone)</strong>.
-                </p>
-              </div>
-
-              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                <span className="w-6 h-6 rounded-full bg-sky-600 text-white font-bold text-xs flex items-center justify-center mb-2">
-                  3
-                </span>
-                <h4 className="font-bold text-xs text-slate-900">Save Webhook URL</h4>
-                <p className="text-xs text-slate-500 mt-1">
-                  Copy the deployment Web App URL and add it to your environment variable <code>GOOGLE_SHEET_WEBHOOK_URL</code>.
-                </p>
+              <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 font-mono text-xs break-all text-sky-800 shadow-sm">
+                https://script.google.com/macros/s/AKfycbyh5YoxAmYc5nB30NQ6S-lYIaMbyG8MsaVImIq4U_pPy48Hww6QDePuNzBGcDNLkBza/exec
               </div>
             </div>
 
@@ -1262,13 +1233,23 @@ function doPost(e) {
                     </p>
                   </div>
                 </div>
-                <div className="text-right">
-                  <div className="border border-slate-400 px-3 py-1 font-mono text-xs font-bold rounded">
-                    App No: {selectedMember.applicationNo}
+                <div className="flex flex-col items-end gap-3">
+                  <div className="border-2 border-slate-800 px-4 py-2 font-mono text-sm font-black tracking-wider rounded-lg flex flex-col items-center justify-center bg-slate-50">
+                    <span className="text-[10px] text-slate-500 font-sans tracking-normal uppercase">App No</span>
+                    <span className="text-lg">{selectedMember.applicationNo}</span>
                   </div>
-                  <div className="mt-2 text-[10px] text-slate-500 font-mono">
+                  <div className="text-[11px] text-slate-500 font-mono tracking-widest font-semibold border-b border-slate-300 pb-1">
                     Date: {selectedMember.submissionDate}
                   </div>
+                  {selectedMember.photoDataUrl && (
+                    <div className="w-24 h-28 border-2 border-slate-300 rounded overflow-hidden shadow-sm bg-slate-50 flex items-center justify-center p-1">
+                      <img 
+                        src={selectedMember.photoDataUrl} 
+                        alt="Member Photo" 
+                        className="w-full h-full object-cover rounded-sm"
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
 
