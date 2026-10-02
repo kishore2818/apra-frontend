@@ -284,15 +284,6 @@ export default function MembershipForm({ onSuccess }) {
               <div className="text-[10px] sm:text-[11px] text-slate-500 font-mono tracking-widest font-semibold border-b border-slate-300 pb-0.5">
                 Date: {submittedData.submissionDate}
               </div>
-              {submittedData.photoUrl || submittedData.photoDataUrl ? (
-                <div className="w-16 h-20 sm:w-24 sm:h-28 print:w-24 print:h-28 border-2 border-slate-300 rounded overflow-hidden shadow-sm bg-slate-50 flex items-center justify-center p-0.5">
-                  <img 
-                    src={submittedData.photoUrl || submittedData.photoDataUrl} 
-                    alt="Member Photo" 
-                    className="w-full h-full object-cover rounded-sm"
-                  />
-                </div>
-              ) : null}
             </div>
           </div>
 
@@ -300,16 +291,28 @@ export default function MembershipForm({ onSuccess }) {
             Membership Application (Official Record)
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 text-xs">
-            <div><strong>Applicant Name:</strong> {submittedData.fullName}</div>
-            <div><strong>Resident Status:</strong> {submittedData.residentType}</div>
-            <div><strong>Age / Gender:</strong> {submittedData.age || 'N/A'} yrs / {submittedData.gender}</div>
-            <div><strong>Plot / Layout No:</strong> {submittedData.layoutPlotNo || 'N/A'}</div>
-            <div><strong>Door No (Old / New):</strong> {submittedData.doorNoOld || '-'} / {submittedData.doorNoNew || '-'}</div>
-            <div><strong>Street:</strong> {submittedData.street}</div>
-            <div className="sm:col-span-2"><strong>Mailing Address:</strong> {submittedData.mailingAddress}</div>
-            <div><strong>Cell Phone:</strong> {submittedData.phone}</div>
-            <div><strong>Email:</strong> {submittedData.email || 'N/A'}</div>
+          <div className="flex flex-col sm:flex-row print:flex-row gap-4 sm:gap-6 items-start">
+            <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4 text-xs w-full">
+              <div><strong>Applicant Name:</strong> {submittedData.fullName}</div>
+              <div><strong>Resident Status:</strong> {submittedData.residentType}</div>
+              <div><strong>Age / Gender:</strong> {submittedData.age || 'N/A'} yrs / {submittedData.gender}</div>
+              <div><strong>Plot / Layout No:</strong> {submittedData.layoutPlotNo || 'N/A'}</div>
+              <div><strong>Door No (Old / New):</strong> {submittedData.doorNoOld || '-'} / {submittedData.doorNoNew || '-'}</div>
+              <div><strong>Street:</strong> {submittedData.street}</div>
+              <div className="sm:col-span-2"><strong>Mailing Address:</strong> {submittedData.mailingAddress}</div>
+              <div><strong>Cell Phone:</strong> {submittedData.phone}</div>
+              <div><strong>Email:</strong> {submittedData.email || 'N/A'}</div>
+            </div>
+            
+            {(submittedData.photoUrl || submittedData.photoDataUrl) && (
+              <div className="w-20 h-24 sm:w-28 sm:h-36 print:w-28 print:h-36 shrink-0 border-2 border-slate-300 rounded-lg overflow-hidden shadow-sm bg-slate-50 flex items-center justify-center p-0.5 self-start mx-auto sm:mx-0 print:mx-0">
+                <img 
+                  src={submittedData.photoUrl || submittedData.photoDataUrl} 
+                  alt="Member Photo" 
+                  className="w-full h-full object-cover rounded-md"
+                />
+              </div>
+            )}
           </div>
 
           {/* Family members summary */}

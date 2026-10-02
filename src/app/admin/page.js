@@ -1452,7 +1452,7 @@ function doPost(e) {
                 "Membership to this association is open to all residents of Ponnappanadar Nagar"
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-start">
+              <div className="flex flex-col sm:flex-row print:flex-row gap-4 sm:gap-6 items-start">
                 <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-4 text-xs w-full">
                   <div>
                     <strong>Applicant Name:</strong> {selectedMember.fullName}
