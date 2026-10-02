@@ -1414,139 +1414,127 @@ function doPost(e) {
             </div>
 
             {/* Document 2 Physical Form Layout Replica */}
-            <div className="p-3.5 sm:p-6 border-2 border-slate-800 rounded-xl sm:rounded-2xl bg-white text-slate-900 mt-3 sm:mt-4 official-form-paper">
-              <div className="flex flex-col sm:flex-row items-start justify-between border-b-2 border-slate-800 pb-3 sm:pb-4 gap-3">
-                <div className="flex items-center gap-2.5 sm:gap-4 min-w-0 w-full sm:w-auto">
-                  <ApraLogo className="w-12 h-12 sm:w-16 sm:h-16 print:w-16 print:h-16 shrink-0 aspect-square" />
-                  <div className="min-w-0 flex-1">
-                    <span className="text-[9px] sm:text-xs font-mono font-bold text-slate-600 block">
-                      Regd. No. 25/2023 • Receipt No: {selectedMember.receiptNo}
-                    </span>
-                    <h3 className="text-xs sm:text-lg font-bold leading-tight break-words">
-                      பொன்னப்பநாடார் நகர் குடியிருப்போர் வசதி மேம்பாட்டு சங்கம்
-                    </h3>
-                    <h4 className="text-[9px] sm:text-sm font-semibold tracking-wider text-sky-800 break-words">
-                      ASSOCIATION FOR PONNAPPANADAR NAGER RESIDENTS AMENITY (APRA)
-                    </h4>
-                    <p className="text-[8px] sm:text-[11px] text-slate-600">
-                      Ponnappa Nadar Nagar, Nagercoil - 629 004
-                    </p>
-                  </div>
-                </div>
-                <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-start gap-2 w-full sm:w-auto shrink-0 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-200">
-                  <div className="border-2 border-slate-800 px-3 py-1 font-mono text-xs sm:text-sm font-black tracking-wider rounded-lg flex flex-col items-center justify-center bg-slate-50">
-                    <span className="text-[8px] sm:text-[9px] text-slate-500 font-sans tracking-normal uppercase">App No</span>
-                    <span className="text-base sm:text-lg">{selectedMember.applicationNo}</span>
-                  </div>
-                  <div className="text-[10px] sm:text-[11px] text-slate-500 font-mono tracking-widest font-semibold border-b border-slate-300 pb-0.5">
-                    Date: {selectedMember.submissionDate}
-                  </div>
-                </div>
+        <div className="mt-4 p-4 border border-slate-800 bg-white text-black official-form-paper w-full overflow-hidden text-[10px]">
+          {/* Header 3-column layout */}
+          <div className="flex flex-row items-center justify-between pb-3 gap-2">
+            {/* Left Logo */}
+            <div className="flex-shrink-0 w-12 h-12 print:w-16 print:h-16">
+              <ApraLogo className="w-full h-full" />
+            </div>
+            
+            {/* Center Text */}
+            <div className="flex-1 text-center">
+              <h3 className="text-[11px] print:text-[14px] font-bold leading-tight uppercase">
+                பொன்னப்பநாடார் நகர் குடியிருப்போர் வசதி மேம்பாட்டு சங்கம்
+              </h3>
+              <h4 className="text-[9px] print:text-[11px] font-bold tracking-wider mt-0.5">
+                ASSOCIATION FOR PONNAPPANADAR NAGER RESIDENTS AMENITY (APRA)
+              </h4>
+              <div className="text-[8px] print:text-[10px] text-slate-700 mt-1 font-mono">
+                Regd. No. 25/2023 &nbsp;|&nbsp; Receipt No: {selectedMember.receiptNo} &nbsp;|&nbsp; Date: {selectedMember.submissionDate}
               </div>
+            </div>
 
-              <div className="my-3 text-center font-bold text-xs sm:text-sm underline uppercase tracking-wider">
-                MEMBERSHIP APPLICATION
-              </div>
-
-              <div className="text-[11px] sm:text-xs text-slate-700 italic mb-3">
-                "Membership to this association is open to all residents of Ponnappanadar Nagar"
-              </div>
-
-              <div className="flex flex-col sm:flex-row print:flex-row gap-4 sm:gap-6 items-start">
-                <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-4 text-xs w-full">
-                  <div>
-                    <strong>Applicant Name:</strong> {selectedMember.fullName}
-                  </div>
-                  <div>
-                    <strong>Resident Status:</strong> {selectedMember.residentType}
-                  </div>
-                  <div>
-                    <strong>Age / Gender:</strong> {selectedMember.age || 'N/A'} yrs / {selectedMember.gender}
-                  </div>
-                  <div>
-                    <strong>Plot / Layout No:</strong> {selectedMember.layoutPlotNo || 'N/A'}
-                  </div>
-                  <div>
-                    <strong>Door No (Old / New):</strong> {selectedMember.doorNoOld || '-'} / {selectedMember.doorNoNew || '-'}
-                  </div>
-                  <div>
-                    <strong>Street:</strong> {selectedMember.street}
-                  </div>
-                  <div className="sm:col-span-2">
-                    <strong>Mailing Address:</strong> {selectedMember.mailingAddress}
-                  </div>
-                  <div>
-                    <strong>Cell Phone:</strong> {selectedMember.phone}
-                  </div>
-                  <div>
-                    <strong>Email:</strong> {selectedMember.email || 'N/A'}
-                  </div>
-                </div>
-                
-                {(selectedMember.photoUrl || selectedMember.photoDataUrl) && (
-                  <div className="w-20 h-24 sm:w-28 sm:h-36 print:w-28 print:h-36 shrink-0 border-2 border-slate-300 rounded-lg overflow-hidden shadow-sm bg-slate-50 flex items-center justify-center p-0.5 self-start mx-auto sm:mx-0">
-                    <img 
-                      src={selectedMember.photoUrl || selectedMember.photoDataUrl} 
-                      alt="Member Photo" 
-                      className="w-full h-full object-cover rounded-md"
-                    />
-                  </div>
+            {/* Right Photo */}
+            <div className="flex-shrink-0 flex flex-col items-center">
+              <div className="w-14 h-16 print:w-20 print:h-24 border border-black flex items-center justify-center bg-white p-0.5">
+                {(selectedMember.photoUrl || selectedMember.photoDataUrl) ? (
+                  <img 
+                    src={selectedMember.photoUrl || selectedMember.photoDataUrl} 
+                    alt="Photo" 
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="text-[6px] text-gray-500">Photo Here</div>
                 )}
               </div>
+            </div>
+          </div>
+
+          <div className="border-t border-b border-black py-1.5 my-2 text-center font-bold text-[11px] print:text-[14px] uppercase tracking-wider relative">
+            MEMBERSHIP APPLICATION
+            <div className="absolute right-2 top-1/2 -translate-y-1/2 border border-black px-2 py-0.5 font-mono text-[8px] print:text-[10px] font-bold">
+              APP NO: {selectedMember.applicationNo}
+            </div>
+          </div>
+
+          <div className="text-[9px] print:text-[11px] text-slate-700 italic mb-2 text-center">
+            "Membership to this association is open to all residents of Ponnappanadar Nagar"
+          </div>
+
+          <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-[9px] print:text-[11px] mt-2">
+            <div><strong>Applicant Name:</strong> {selectedMember.fullName}</div>
+            <div><strong>Resident Status:</strong> {selectedMember.residentType}</div>
+            <div><strong>Age / Gender:</strong> {selectedMember.age || 'N/A'} yrs / {selectedMember.gender}</div>
+            <div><strong>Plot / Layout No:</strong> {selectedMember.layoutPlotNo || 'N/A'}</div>
+            <div><strong>Door No (Old / New):</strong> {selectedMember.doorNoOld || '-'} / {selectedMember.doorNoNew || '-'}</div>
+            <div><strong>Street:</strong> {selectedMember.street}</div>
+            <div className="col-span-2 border-b border-dashed border-gray-400 pb-1"><strong>Mailing Address:</strong> <span className="font-medium">{selectedMember.mailingAddress}</span></div>
+            <div className="border-b border-dashed border-gray-400 pb-1"><strong>Cell Phone:</strong> <span className="font-medium">{selectedMember.phone}</span></div>
+            <div className="border-b border-dashed border-gray-400 pb-1"><strong>Email:</strong> <span className="font-medium">{selectedMember.email || 'N/A'}</span></div>
+          </div>
 
 
-              {/* Family members table */}
-              <div className="mt-4 pt-3 border-t border-slate-300">
-                <h5 className="font-bold text-xs mb-2">Household Members to be included in membership card:</h5>
-                <table className="w-full text-[11px] border-collapse border border-slate-300">
+            {/* Family members table */}
+            <div className="mt-4 pt-2">
+              <h5 className="font-bold text-[9px] print:text-[11px] mb-1.5 uppercase">Household Members to be included in membership card:</h5>
+              <div className="w-full">
+                <table className="w-full text-[8px] print:text-[10px] border-collapse border border-slate-800">
                   <thead>
-                    <tr className="bg-slate-100">
-                      <th className="border border-slate-300 p-1 text-left">Sl</th>
-                      <th className="border border-slate-300 p-1 text-left">Name</th>
-                      <th className="border border-slate-300 p-1 text-left">Gender</th>
-                      <th className="border border-slate-300 p-1 text-left">Relationship</th>
-                      <th className="border border-slate-300 p-1 text-left">Age</th>
+                    <tr className="bg-gray-100">
+                      <th className="border border-slate-800 p-1 text-left w-8">Sl</th>
+                      <th className="border border-slate-800 p-1 text-left">Name</th>
+                      <th className="border border-slate-800 p-1 text-left">Gender</th>
+                      <th className="border border-slate-800 p-1 text-left">Relationship</th>
+                      <th className="border border-slate-800 p-1 text-left w-12">Age</th>
                     </tr>
                   </thead>
                   <tbody>
                     {(selectedMember.familyMembers || []).map((m, idx) => (
                       <tr key={idx}>
-                        <td className="border border-slate-300 p-1">{idx + 1}</td>
-                        <td className="border border-slate-300 p-1 font-semibold">{m.name}</td>
-                        <td className="border border-slate-300 p-1">{m.gender}</td>
-                        <td className="border border-slate-300 p-1">{m.relationship}</td>
-                        <td className="border border-slate-300 p-1">{m.age}</td>
+                        <td className="border border-slate-800 p-1">{idx + 1}</td>
+                        <td className="border border-slate-800 p-1 font-semibold">{m.name}</td>
+                        <td className="border border-slate-800 p-1">{m.gender}</td>
+                        <td className="border border-slate-800 p-1">{m.relationship}</td>
+                        <td className="border border-slate-800 p-1">{m.age}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
+            </div>
 
-              {/* Office Use Section */}
-              <div className="mt-6 pt-4 border-t-2 border-slate-800">
-                <div className="text-[11px] font-bold uppercase tracking-wider mb-2">For Office Use Only:</div>
-                <div className="flex items-center justify-between text-xs mb-4">
-                  <span>Receipt No: <strong>#{selectedMember.receiptNo}</strong></span>
-                  <span>Registration: <strong>Direct Official Enrollment</strong></span>
-                  <span>Status: <strong>{selectedMember.status}</strong></span>
+            {/* Office Use Section */}
+            <div className="mt-6 pt-4 border-t border-slate-800">
+              <div className="text-[9px] print:text-[11px] font-bold uppercase tracking-wider mb-2 text-center">For Office Use Only</div>
+              <div className="flex items-center justify-between text-[8px] print:text-[10px] mb-4 font-mono">
+                <span>Receipt No: <strong>#{selectedMember.receiptNo}</strong></span>
+                <span>Registration: <strong>Direct Official Enrollment</strong></span>
+                <span>Status: <strong>{selectedMember.status}</strong></span>
+              </div>
+
+              <div className="grid grid-cols-4 gap-2 text-center text-[8px] print:text-[10px] pt-4">
+                <div>
+                  <div className="h-8 flex items-end justify-center font-serif italic font-bold truncate">
+                    {selectedMember.signatureName || selectedMember.fullName}
+                  </div>
+                  <p className="border-t border-slate-800 pt-1 font-bold">Member</p>
                 </div>
-
-                <div className="grid grid-cols-3 gap-4 text-center text-xs pt-4 border-t border-slate-300">
-                  <div>
-                    <div className="h-8 flex items-end justify-center font-serif italic text-slate-700">K.S. Murugesan</div>
-                    <p className="border-t border-slate-400 pt-1 font-semibold">President</p>
-                  </div>
-                  <div>
-                    <div className="h-8 flex items-end justify-center font-serif italic text-slate-700">K. Perumal</div>
-                    <p className="border-t border-slate-400 pt-1 font-semibold">Secretary</p>
-                  </div>
-                  <div>
-                    <div className="h-8 flex items-end justify-center font-serif italic text-slate-700">D. Vivekanandan</div>
-                    <p className="border-t border-slate-400 pt-1 font-semibold">Treasurer</p>
-                  </div>
+                <div>
+                  <div className="h-8 flex items-end justify-center font-serif italic text-slate-700">K.S. Murugesan</div>
+                  <p className="border-t border-slate-800 pt-1 font-bold">President</p>
+                </div>
+                <div>
+                  <div className="h-8 flex items-end justify-center font-serif italic text-slate-700">K. Perumal</div>
+                  <p className="border-t border-slate-800 pt-1 font-bold">Secretary</p>
+                </div>
+                <div>
+                  <div className="h-8 flex items-end justify-center font-serif italic text-slate-700">D. Vivekanandan</div>
+                  <p className="border-t border-slate-800 pt-1 font-bold">Treasurer</p>
                 </div>
               </div>
             </div>
+          </div>
 
             {/* Approval Action Footer */}
             <div className="mt-6 pt-4 border-t border-slate-200 flex items-center justify-end gap-3 no-print">
