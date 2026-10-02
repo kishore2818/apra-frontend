@@ -14,13 +14,24 @@ export default function OfficeBearers() {
   const [searchTerm, setSearchTerm] = useState('');
   const [copiedPhone, setCopiedPhone] = useState('');
 
-  // Fetch updated bearers from API on client mount
+  // Fetch updated bearers from API on client mount (with instant session cache)
   useEffect(() => {
+    try {
+      const cached = sessionStorage.getItem('apra_office_bearers');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (parsed?.length) setBearersList(parsed);
+      }
+    } catch (e) {}
+
     fetch('/api/heads')
       .then((res) => res.json())
       .then((data) => {
         if (data.success && data.bearers?.length) {
           setBearersList(data.bearers);
+          try {
+            sessionStorage.setItem('apra_office_bearers', JSON.stringify(data.bearers));
+          } catch (e) {}
         }
       })
       .catch((err) => console.error('Failed to load bearers:', err));

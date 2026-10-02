@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { addMember, getAllMembers } from '@/lib/serverStore';
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
+const BACKEND_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:5001').replace('localhost', '127.0.0.1');
 
 export async function POST(request) {
   try {
@@ -19,6 +19,7 @@ export async function POST(request) {
     try {
       const backendRes = await fetch(`${BACKEND_URL}/api/members`, {
         method: 'POST',
+        signal: AbortSignal.timeout(4000),
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
       });
@@ -65,7 +66,10 @@ export async function GET(request) {
 
     // Try fetching from Backend API
     try {
-      const backendRes = await fetch(`${BACKEND_URL}/api/members`);
+      const backendRes = await fetch(`${BACKEND_URL}/api/members`, {
+        signal: AbortSignal.timeout(1800),
+        headers: { 'Accept': 'application/json' }
+      });
       if (backendRes.ok) {
         const data = await backendRes.json();
         const members = data.members || [];

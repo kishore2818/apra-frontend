@@ -7,23 +7,57 @@ import {
   resetOfficeBearersToDefault 
 } from '@/lib/serverStore';
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001';
+const BACKEND_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:5001').replace('localhost', '127.0.0.1');
+
+// In-memory cache for office bearers
+let cachedHeadsData = null;
+let headsCacheExpiry = 0;
 
 export async function GET() {
   try {
-    // Try fetching from Backend API (Supabase)
+    const now = Date.now();
+    if (cachedHeadsData && headsCacheExpiry > now) {
+      return NextResponse.json(cachedHeadsData, {
+        headers: {
+          'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
+          'X-Cache': 'HIT-NEXT'
+        }
+      });
+    }
+
+    // Try fetching from Backend API (Supabase) with fast 1.8s timeout
     try {
-      const backendRes = await fetch(`${BACKEND_URL}/api/heads`);
+      const backendRes = await fetch(`${BACKEND_URL}/api/heads`, {
+        signal: AbortSignal.timeout(1800),
+        headers: { 'Accept': 'application/json' },
+        next: { revalidate: 60 }
+      });
       if (backendRes.ok) {
         const data = await backendRes.json();
-        return NextResponse.json(data);
+        cachedHeadsData = data;
+        headsCacheExpiry = Date.now() + 60000; // 1 min server cache
+        return NextResponse.json(data, {
+          headers: {
+            'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
+            'X-Cache': 'MISS-BACKEND'
+          }
+        });
       }
     } catch (err) {
-      console.warn('Backend API unavailable for heads GET, using local fallback:', err.message);
+      // Backend not running or slow - immediately return local store
     }
 
     const bearers = getAllOfficeBearers();
-    return NextResponse.json({ success: true, bearers });
+    const localData = { success: true, bearers };
+    cachedHeadsData = localData;
+    headsCacheExpiry = Date.now() + 60000;
+
+    return NextResponse.json(localData, {
+      headers: {
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
+        'X-Cache': 'LOCAL-STORE'
+      }
+    });
   } catch (error) {
     return NextResponse.json({ success: false, message: error.message }, { status: 500 });
   }
@@ -31,12 +65,15 @@ export async function GET() {
 
 export async function POST(request) {
   try {
+    cachedHeadsData = null;
+    headsCacheExpiry = 0;
     const body = await request.json();
 
     if (body.action === 'RESET') {
       try {
         await fetch(`${BACKEND_URL}/api/heads`, {
           method: 'POST',
+          signal: AbortSignal.timeout(2000),
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ action: 'RESET' })
         });
@@ -60,6 +97,7 @@ export async function POST(request) {
     try {
       const backendRes = await fetch(`${BACKEND_URL}/api/heads`, {
         method: 'POST',
+        signal: AbortSignal.timeout(2000),
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
       });
@@ -82,6 +120,8 @@ export async function POST(request) {
 
 export async function PATCH(request) {
   try {
+    cachedHeadsData = null;
+    headsCacheExpiry = 0;
     const body = await request.json();
     const { id, ...updatedFields } = body;
 
@@ -96,6 +136,7 @@ export async function PATCH(request) {
     try {
       const backendRes = await fetch(`${BACKEND_URL}/api/heads/${id}`, {
         method: 'PATCH',
+        signal: AbortSignal.timeout(2000),
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedFields)
       });
@@ -125,6 +166,8 @@ export async function PATCH(request) {
 
 export async function DELETE(request) {
   try {
+    cachedHeadsData = null;
+    headsCacheExpiry = 0;
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
 
@@ -138,7 +181,8 @@ export async function DELETE(request) {
     // Try backend
     try {
       const backendRes = await fetch(`${BACKEND_URL}/api/heads/${id}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        signal: AbortSignal.timeout(2000)
       });
       if (backendRes.ok) {
         const data = await backendRes.json();

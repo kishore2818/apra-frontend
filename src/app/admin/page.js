@@ -55,13 +55,23 @@ export default function AdminPage() {
     note: ''
   });
 
-  // Check login on mount
+  // Check login on mount with instant session cache hydration
   useEffect(() => {
     const saved = localStorage.getItem('apra_admin_auth');
     if (saved === 'true') {
       setIsAuthenticated(true);
-      fetchMembers();
-      fetchOfficeBearers();
+      // Instant hydration from cache for 0ms visual load
+      try {
+        const cachedMembers = sessionStorage.getItem('apra_admin_members');
+        const cachedStats = sessionStorage.getItem('apra_admin_stats');
+        const cachedBearers = sessionStorage.getItem('apra_office_bearers');
+        if (cachedMembers) setMembers(JSON.parse(cachedMembers));
+        if (cachedStats) setStats(JSON.parse(cachedStats));
+        if (cachedBearers) setOfficeBearers(JSON.parse(cachedBearers));
+      } catch (e) {}
+
+      // Parallel background refresh
+      Promise.allSettled([fetchMembers(), fetchOfficeBearers()]);
     }
   }, []);
 
@@ -76,8 +86,7 @@ export default function AdminPage() {
     ) {
       setIsAuthenticated(true);
       localStorage.setItem('apra_admin_auth', 'true');
-      fetchMembers();
-      fetchOfficeBearers();
+      Promise.allSettled([fetchMembers(), fetchOfficeBearers()]);
     } else {
       setLoginError('Invalid credentials. Use demo: admin@apra.org / apra2023 or PIN 2023');
     }
@@ -86,16 +95,25 @@ export default function AdminPage() {
   const handleLogout = () => {
     setIsAuthenticated(false);
     localStorage.removeItem('apra_admin_auth');
+    try {
+      sessionStorage.removeItem('apra_admin_members');
+      sessionStorage.removeItem('apra_admin_stats');
+      sessionStorage.removeItem('apra_office_bearers');
+    } catch (e) {}
   };
 
   const fetchMembers = async () => {
-    setLoading(true);
+    if (!members.length) setLoading(true);
     try {
       const res = await fetch('/api/admin');
       const data = await res.json();
       if (data.success) {
-        setMembers(data.members);
-        setStats(data.stats);
+        setMembers(data.members || []);
+        setStats(data.stats || null);
+        try {
+          sessionStorage.setItem('apra_admin_members', JSON.stringify(data.members || []));
+          sessionStorage.setItem('apra_admin_stats', JSON.stringify(data.stats || null));
+        } catch (e) {}
       }
     } catch (err) {
       console.error('Failed to fetch members:', err);
@@ -105,12 +123,15 @@ export default function AdminPage() {
   };
 
   const fetchOfficeBearers = async () => {
-    setBearersLoading(true);
+    if (!officeBearers.length) setBearersLoading(true);
     try {
       const res = await fetch('/api/heads');
       const data = await res.json();
       if (data.success) {
         setOfficeBearers(data.bearers || []);
+        try {
+          sessionStorage.setItem('apra_office_bearers', JSON.stringify(data.bearers || []));
+        } catch (e) {}
       }
     } catch (err) {
       console.error('Failed to fetch office bearers:', err);
